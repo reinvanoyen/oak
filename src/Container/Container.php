@@ -2,9 +2,13 @@
 
 namespace Oak\Container;
 
-use Oak\Contracts\ContainerInterface;
+use Oak\Contracts\Container\ContainerInterface;
 use ReflectionClass;
 
+/**
+ * Class Container
+ * @package Oak\Container
+ */
 class Container implements ContainerInterface
 {
 	/**

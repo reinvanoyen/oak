@@ -5,6 +5,10 @@ namespace Oak\Session;
 use Oak\Contracts\Filesystem\FilesystemInterface;
 use SessionHandlerInterface;
 
+/**
+ * Class FileSessionHandler
+ * @package Oak\Session
+ */
 class FileSessionHandler implements SessionHandlerInterface
 {
 	/**
