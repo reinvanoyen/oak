@@ -2,7 +2,7 @@
 
 namespace Oak;
 
-use Oak\Contracts\ContainerInterface;
+use Oak\Contracts\Container\ContainerInterface;
 
 /**
  * Class ServiceProvider

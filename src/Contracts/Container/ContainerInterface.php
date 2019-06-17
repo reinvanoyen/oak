@@ -1,6 +1,6 @@
 <?php
 
-namespace Oak\Contracts;
+namespace Oak\Contracts\Container;
 
 interface ContainerInterface
 {

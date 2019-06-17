@@ -4,6 +4,10 @@ namespace Oak;
 
 use Oak\Container\Container;
 
+/**
+ * Class Application
+ * @package Oak
+ */
 class Application extends Container
 {
 	/**
