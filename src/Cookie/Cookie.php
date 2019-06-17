@@ -1,6 +1,6 @@
 <?php
 
-namespace app\cookie;
+namespace Oak\Cookie;
 
 use Oak\Contracts\Cookie\CookieInterface;
 
