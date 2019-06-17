@@ -1,6 +1,6 @@
 <?php
 
-namespace app\session;
+namespace Oak\Session;
 
 use Oak\Contracts\Filesystem\FilesystemInterface;
 use SessionHandlerInterface;
