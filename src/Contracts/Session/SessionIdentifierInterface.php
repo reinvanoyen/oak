@@ -1,6 +1,6 @@
 <?php
 
-namespace app\session\contracts;
+namespace Oak\Contracts\Session;
 
 /**
  * Interface SessionIdentifierInterface

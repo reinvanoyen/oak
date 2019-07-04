@@ -2,7 +2,7 @@
 
 namespace Oak\Session;
 
-use app\session\contracts\SessionIdentifierInterface;
+use Oak\Contracts\Session\SessionIdentifierInterface;
 
 class SessionIdentifier implements SessionIdentifierInterface
 {
