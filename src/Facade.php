@@ -14,13 +14,6 @@ abstract class Facade
 	private static $container;
 
 	/**
-	 * The resolved instances
-	 *
-	 * @var $instance
-	 */
-	protected static $instances = [];
-
-	/**
 	 *
 	 *
 	 * @param ContainerInterface $container
@@ -45,13 +38,7 @@ abstract class Facade
 			throw new \Exception('No container set for facades');
 		}
 
-		$contract = static::getContract();
-
-		if (! isset(static::$instances[$contract])) {
-			static::$instances[$contract] = self::$container->get($contract);
-		}
-
-		return static::$instances[$contract];
+		return self::$container->get(static::getContract());
 	}
 
 	public static function __callStatic($method, $arguments)
