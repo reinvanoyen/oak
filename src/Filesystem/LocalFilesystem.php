@@ -142,14 +142,36 @@ class LocalFilesystem implements FilesystemInterface
 	}
 
 	/**
-	 * Moves the file at path to the new path
+	 * Moves the file to the target
 	 *
 	 * @param string $path
-	 * @param string $newPath
+	 * @param string $target
 	 */
-	public function move(string $path, string $newPath)
+	public function move(string $path, string $target)
 	{
-		rename($path, $newPath);
+		$dir = dirname($target);
+		if (!file_exists($dir)) {
+			mkdir($dir, 0766, true);
+		}
+
+		rename($path, $target);
+	}
+
+	/**
+	 * Copies the file to the target
+	 *
+	 * @param string $path
+	 * @param string $target
+	 * @return mixed|void
+	 */
+	public function copy(string $path, string $target)
+	{
+		$dir = dirname($target);
+		if (!file_exists($dir)) {
+			mkdir($dir, 0766, true);
+		}
+
+		copy($path, $target);
 	}
 
 	/**

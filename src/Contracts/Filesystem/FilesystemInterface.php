@@ -26,6 +26,10 @@ interface FilesystemInterface
 	 */
 	public function isReadable(string $path): bool;
 
+	/**
+	 * @param string $path
+	 * @return int
+	 */
 	public function size(string $path): int;
 
 	/**
@@ -91,4 +95,11 @@ interface FilesystemInterface
 	 * @return mixed
 	 */
 	public function move(string $path, string $newPath);
+
+	/**
+	 * @param string $path
+	 * @param string $newPath
+	 * @return mixed
+	 */
+	public function copy(string $path, string $newPath);
 }
