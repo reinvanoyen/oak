@@ -2,7 +2,11 @@
 
 namespace Oak\Contracts\Console;
 
-interface KernerInterface
+/**
+ * Interface KernerInterface
+ * @package Oak\Contracts\Console
+ */
+interface KernelInterface
 {
 	public function handle(InputInterface $input, OutputInterface $output);
 }

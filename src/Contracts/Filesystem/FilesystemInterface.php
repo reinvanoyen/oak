@@ -2,6 +2,10 @@
 
 namespace Oak\Contracts\Filesystem;
 
+/**
+ * Interface FilesystemInterface
+ * @package Oak\Contracts\Filesystem
+ */
 interface FilesystemInterface
 {
 	/**
