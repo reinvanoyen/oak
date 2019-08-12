@@ -1,6 +1,6 @@
 <?php
 
-namespace app\filesystem\facade;
+namespace Oak\Filesystem\Facade;
 
 use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Facade;

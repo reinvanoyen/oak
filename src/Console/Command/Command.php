@@ -132,6 +132,14 @@ abstract class Command
 	 */
 	public function outputHelpMessage(OutputInterface $output)
 	{
+		$output->write('
+            _   
+           | |  
+ __   __,  | |  
+/  \_/  |  |/_) 
+\__/ \_/|_/| \_/
+		');
+
 		if ($this->getDescription()) {
 			$output->writeLine($this->getName().':', OutputInterface::TYPE_WARNING);
 			$output->writeLine(' '.$this->getDescription());
@@ -169,8 +177,14 @@ abstract class Command
 
 			foreach ($commands as $command) {
 				$output->write(' '.str_pad($command->getName(), 20), OutputInterface::TYPE_INFO);
-				$output->write($command->getDescription());
+				$output->write($command->getDescription(), OutputInterface::TYPE_INFO);
 				$output->newline();
+
+				foreach ($command->getSignature()->getSubCommands() as $subCommand) {
+					$output->write('   '.str_pad($subCommand->getName(), 18), OutputInterface::TYPE_PLAIN);
+					$output->write($subCommand->getDescription());
+					$output->newline();
+				}
 			}
 
 			$output->newline();

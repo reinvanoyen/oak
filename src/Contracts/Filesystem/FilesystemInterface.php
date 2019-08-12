@@ -75,6 +75,12 @@ interface FilesystemInterface
 
 	/**
 	 * @param string $path
+	 * @return array
+	 */
+	public function directories(string $path): array;
+
+	/**
+	 * @param string $path
 	 * @return mixed
 	 */
 	public function delete(string $path);

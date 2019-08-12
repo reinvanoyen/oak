@@ -153,13 +153,24 @@ class LocalFilesystem implements FilesystemInterface
 	}
 
 	/**
-	 * Get all files in the dir
+	 * Get all files in a directory
 	 *
 	 * @param string $path
 	 * @return array
 	 */
 	public function files(string $path): array
 	{
-		return glob($path.'/*');
+		return array_filter(glob($path.'/*'), 'is_file');
+	}
+
+	/**
+	 * Get all directories in a directory
+	 *
+	 * @param string $path
+	 * @return array
+	 */
+	public function directories(string $path): array
+	{
+		return array_filter(glob($path.'/*'), 'is_dir');
 	}
 }

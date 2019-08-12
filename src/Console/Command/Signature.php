@@ -144,6 +144,10 @@ class Signature
 		return $this->subCommands;
 	}
 
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
 	public function hasSubCommand(string $name): bool
 	{
 		return isset($this->subCommands[$name]);
