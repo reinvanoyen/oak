@@ -92,6 +92,10 @@ abstract class Command
 		$this->created = true;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$this->outputHelpMessage($output);
@@ -140,20 +144,23 @@ abstract class Command
 \__/ \_/|_/| \_/
 		');
 
+		$output->newline();
+
 		if ($this->getDescription()) {
-			$output->writeLine($this->getName().':', OutputInterface::TYPE_WARNING);
-			$output->writeLine(' '.$this->getDescription());
+			$output->writeLine(ucfirst($this->getName()).':', OutputInterface::TYPE_WARNING);
+			$output->writeLine($this->getDescription());
 		}
 
 		$output->newline();
 
 		$commands = $this->signature->getSubCommands();
+		ksort($commands);
 		$arguments = $this->signature->getArguments();
 		$options = $this->signature->getOptions();
 
 		$output->writeLine('Usage:', OutputInterface::TYPE_WARNING);
 
-		$output->write(' '.$this->getName());
+		$output->write($this->getName());
 		if (count($commands)) {
 			$output->write(' [command]');
 		}
@@ -176,12 +183,15 @@ abstract class Command
 			$output->writeLine('Available commands:', OutputInterface::TYPE_WARNING);
 
 			foreach ($commands as $command) {
-				$output->write(' '.str_pad($command->getName(), 20), OutputInterface::TYPE_INFO);
+				$output->write(str_pad($command->getName(), 20), OutputInterface::TYPE_INFO);
 				$output->write($command->getDescription(), OutputInterface::TYPE_INFO);
 				$output->newline();
 
-				foreach ($command->getSignature()->getSubCommands() as $subCommand) {
-					$output->write('   '.str_pad($subCommand->getName(), 18), OutputInterface::TYPE_PLAIN);
+				$subCommands = $command->getSignature()->getSubCommands();
+				ksort($subCommands);
+
+				foreach ($subCommands as $subCommand) {
+					$output->write(' '.str_pad($subCommand->getName(), 19), OutputInterface::TYPE_PLAIN);
 					$output->write($subCommand->getDescription());
 					$output->newline();
 				}
@@ -195,7 +205,7 @@ abstract class Command
 			$output->writeLine('Arguments:', OutputInterface::TYPE_WARNING);
 
 			foreach ($arguments as $argument) {
-				$output->write(' '.str_pad($argument->getName(), 20), OutputInterface::TYPE_INFO);
+				$output->write(str_pad($argument->getName(), 20), OutputInterface::TYPE_INFO);
 				$output->write($argument->getDescription());
 				$output->newline();
 			}
@@ -208,7 +218,7 @@ abstract class Command
 			$output->writeLine('Options:', OutputInterface::TYPE_WARNING);
 
 			foreach ($options as $option) {
-				$output->write(' '.str_pad('-'.$option->getAlias().', --'.$option->getName(), 20), OutputInterface::TYPE_INFO);
+				$output->write(str_pad('-'.$option->getAlias().', --'.$option->getName(), 20), OutputInterface::TYPE_INFO);
 				$output->write($option->getDescription());
 				$output->newline();
 			}
