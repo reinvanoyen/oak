@@ -2,8 +2,10 @@
 
 namespace Oak\Filesystem;
 
+use Oak\Console\Facade\Console;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Filesystem\FilesystemInterface;
+use Oak\Filesystem\Console\Filesystem;
 use Oak\ServiceProvider;
 
 /**
@@ -12,20 +14,16 @@ use Oak\ServiceProvider;
  */
 class FilesystemServiceProvider extends ServiceProvider
 {
-	protected $isLazy = true;
-
 	public function boot(ContainerInterface $app)
 	{
-		//
+		Console::registerCommand(Filesystem::class);
 	}
 
 	public function register(ContainerInterface $app)
 	{
 		$app->set(FilesystemInterface::class, LocalFilesystem::class);
-	}
 
-	public function provides(): array
-	{
-		return [FilesystemInterface::class,];
+		// Console
+		$app->set(Filesystem::class, Filesystem::class);
 	}
 }

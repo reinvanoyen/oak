@@ -21,7 +21,7 @@ class Log extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		Logger::log($input->getArgument('message'));
+		\Oak\Logger\Facade\Logger::log($input->getArgument('message'));
 
 		$output->writeLine('Message logged', OutputInterface::TYPE_INFO);
 	}

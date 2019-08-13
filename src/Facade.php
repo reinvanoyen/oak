@@ -41,6 +41,12 @@ abstract class Facade
 		return self::$container->get(static::getContract());
 	}
 
+	/**
+	 * @param $method
+	 * @param $arguments
+	 * @return mixed
+	 * @throws \Exception
+	 */
 	public static function __callStatic($method, $arguments)
 	{
 		return static::getInstance()->$method(...$arguments);
