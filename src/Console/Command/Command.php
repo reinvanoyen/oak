@@ -82,7 +82,7 @@ abstract class Command
 		}
 
 		$signature = new Signature();
-		$signature->addOption(Option::create('help', 'h')->setDescription('Display this help message'));
+		$signature->addOption(Option::create('help', 'h')->setDescription('Display the help message'));
 		$this->signature = $this->createSignature($signature);
 
 		if (! $this->signature->hasName()) {
@@ -136,16 +136,6 @@ abstract class Command
 	 */
 	public function outputHelpMessage(OutputInterface $output)
 	{
-		$output->write('
-            _   
-           | |  
- __   __,  | |  
-/  \_/  |  |/_) 
-\__/ \_/|_/| \_/
-		');
-
-		$output->newline();
-
 		if ($this->getDescription()) {
 			$output->writeLine(ucfirst($this->getName()).':', OutputInterface::TYPE_WARNING);
 			$output->writeLine($this->getDescription());

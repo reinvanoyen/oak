@@ -10,6 +10,8 @@ use Oak\Container\Container;
  */
 class Application extends Container
 {
+	const VERSION = '0.1.38';
+
 	/**
 	 * @var bool $isBooted
 	 */

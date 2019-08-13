@@ -2,6 +2,8 @@
 
 namespace Oak\Console;
 
+use Oak\Application;
+use Oak\Console\Command\Option;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Console\InputInterface;
@@ -72,6 +74,37 @@ class Kernel extends Command implements KernelInterface
 	 */
 	protected function createSignature(Signature $signature): Signature
 	{
-		return $signature->setName('oak');
+		return $signature->setName('oak')
+			->addOption(Option::create('version', 'v')->setDescription('Display the version of Oak framework'))
+			;
+	}
+
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output)
+	{
+		$this->showLogo($output);
+		if ($input->getOption('version')) {
+			$output->newline();
+			$output->writeLine('Oak framework version '.Application::VERSION, OutputInterface::TYPE_INFO);
+			$output->writeLine('By Rein Van Oyen');
+			$output->newline();
+			$output->writeLine('More information, feedback or need help?');
+			$output->writeLine('https://github.com/reinvanoyen/oak');
+			return;
+		}
+
+		parent::execute($input, $output);
+	}
+
+	/**
+	 * @param OutputInterface $output
+	 */
+	private function showLogo(OutputInterface $output)
+	{
+		$output->write(file_get_contents(__DIR__.'/../Resources/ascii-logo.txt'));
+		$output->newline();
 	}
 }

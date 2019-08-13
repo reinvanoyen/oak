@@ -2,6 +2,7 @@
 
 namespace Oak\Session;
 
+use Oak\Console\Facade\Console;
 use Oak\Contracts\Session\SessionIdentifierInterface;
 use Oak\ServiceProvider;
 use Oak\Contracts\Container\ContainerInterface;
@@ -21,6 +22,8 @@ class SessionServiceProvider extends ServiceProvider
 		$app->singleton(Session::class, function () use ($app) {
 			return new Session($app->get(\SessionHandlerInterface::class), 'oak_app');
 		});
+
+		$app->set(\Oak\Session\Console\Session::class, \Oak\Session\Console\Session::class);
 	}
 
 	public function boot(ContainerInterface $app)
@@ -32,6 +35,7 @@ class SessionServiceProvider extends ServiceProvider
 			$session->getHandler()->gc(1000);
 		}
 
+		// Set session cookie
 		$cookieName = 'session_'.$session->getName();
 
 		if (! Cookie::has($cookieName)) {
@@ -44,5 +48,8 @@ class SessionServiceProvider extends ServiceProvider
 		}
 
 		$session->setId(Cookie::get($cookieName));
+
+		// Register console command
+		Console::registerCommand(\Oak\Session\Console\Session::class);
 	}
 }
