@@ -126,10 +126,14 @@ class Container implements ContainerInterface
 	{
 		// First check if we can find an implementation for the requested contract
 		if (! $this->has($contract)) {
-			throw new \Exception('Could not create dependency with contract: '.$contract);
+			if (class_exists($contract)) {
+				$implementation = $contract;
+			} else {
+				throw new \Exception('Could not create dependency with contract: '.$contract);
+			}
+		} else {
+			$implementation = $this->contracts[$contract];
 		}
-
-		$implementation = $this->contracts[$contract];
 
 		if (is_callable($implementation)) {
 			return call_user_func($implementation, $this);
