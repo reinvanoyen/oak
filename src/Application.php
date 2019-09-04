@@ -28,6 +28,15 @@ class Application extends Container
 	private $lazyProviders = [];
 
 	/**
+	 * Application constructor.
+	 */
+	public function __construct()
+	{
+		// We set this application as the container for the facade
+		Facade::setContainer($this);
+	}
+
+	/**
 	 * @param $provider
 	 * @throws \Exception
 	 */
@@ -49,6 +58,7 @@ class Application extends Container
 			foreach ($provider->provides() as $providing) {
 				$this->lazyProviders[$providing] = $provider;
 			}
+			$provider->register($this);
 		} else {
 			$this->registeredProviders[] = $provider;
 			$this->initServiceProvider($provider);
@@ -76,8 +86,8 @@ class Application extends Container
 	private function bootServiceProvider(ServiceProvider $provider)
 	{
 		if (! $provider->isBooted()) {
-			$provider->boot($this);
 			$provider->setBooted();
+			$provider->boot($this);
 		}
 	}
 
@@ -91,7 +101,7 @@ class Application extends Container
 	public function get(string $key)
 	{
 		if (isset($this->lazyProviders[$key])) {
-			$this->initServiceProvider($this->lazyProviders[$key]);
+			$this->bootServiceProvider($this->lazyProviders[$key]);
 			unset($this->lazyProviders[$key]);
 		}
 		return parent::get($key);
@@ -124,9 +134,6 @@ class Application extends Container
 	 */
 	public function bootstrap(): void
 	{
-		// We set this application as the container for the facade
-		Facade::setContainer($this);
-
 		// We boot all service providers
 		$this->boot();
 	}
