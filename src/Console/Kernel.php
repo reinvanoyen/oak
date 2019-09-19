@@ -4,7 +4,6 @@ namespace Oak\Console;
 
 use Oak\Application;
 use Oak\Console\Command\Option;
-use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Console\InputInterface;
 use Oak\Contracts\Console\OutputInterface;
@@ -18,25 +17,11 @@ use Oak\Console\Command\Signature;
 class Kernel extends Command implements KernelInterface
 {
 	/**
-	 * @var ContainerInterface
-	 */
-	private $container;
-
-	/**
 	 * An array holding registered commands
 	 *
 	 * @var array
 	 */
 	private $registeredCommands = [];
-
-	/**
-	 * Kernel constructor.
-	 * @param ContainerInterface $app
-	 */
-	public function __construct(ContainerInterface $container)
-	{
-		$this->container = $container;
-	}
 
 	/**
 	 * Handle the incoming input
@@ -48,7 +33,7 @@ class Kernel extends Command implements KernelInterface
 	{
 		foreach ($this->registeredCommands as $command) {
 			if (is_string($command)) {
-				$this->getSignature()->addSubCommand($this->container->get($command));
+				$this->getSignature()->addSubCommand($this->app->get($command));
 				continue;
 			}
 

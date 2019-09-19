@@ -11,8 +11,8 @@ class Filesystem extends Command
 	{
 		return $signature
 			->setName('fs')
-			->addSubCommand(new Directories())
-			->addSubCommand(new Files())
+			->addSubCommand(Directories::class)
+			->addSubCommand(Files::class)
 		;
 	}
 }

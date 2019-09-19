@@ -4,216 +4,232 @@ namespace Oak\Console\Command;
 
 use Oak\Contracts\Console\InputInterface;
 use Oak\Contracts\Console\OutputInterface;
+use Oak\Contracts\Container\ContainerInterface;
 
 abstract class Command
 {
-	/**
-	 * The signature of the command
-	 *
-	 * @var Signature
-	 */
-	private $signature;
+    /**
+     * @var ContainerInterface $app
+     */
+    protected $app;
 
-	/**
-	 * Stores if the command was created
-	 *
-	 * @var bool
-	 */
-	private $created = false;
+    /**
+     * The signature of the command
+     *
+     * @var Signature
+     */
+    private $signature;
 
-	/**
-	 * Creates the signature of the command
-	 *
-	 * @param Signature $signature
-	 * @return Signature
-	 */
-	abstract protected function createSignature(Signature $signature): Signature;
+    /**
+     * Stores if the command was created
+     *
+     * @var bool
+     */
+    private $created = false;
 
-	/**
-	 * Gets the name of the command
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	final public function getName(): string
-	{
-		$this->make();
+    /**
+     * Command constructor.
+     * @param ContainerInterface $app
+     */
+    public function __construct(ContainerInterface $app)
+    {
+        $this->app = $app;
+    }
 
-		if (! $this->signature->hasName()) {
-			throw new \Exception('Command should have a name');
-		}
+    /**
+     * Creates the signature of the command
+     *
+     * @param Signature $signature
+     * @return Signature
+     */
+    abstract protected function createSignature(Signature $signature): Signature;
 
-		return $this->signature->getName();
-	}
+    /**
+     * Gets the name of the command
+     *
+     * @return string
+     * @throws \Exception
+     */
+    final public function getName(): string
+    {
+        $this->make();
 
-	/**
-	 * Gets the description of the command
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	final public function getDescription(): string
-	{
-		$this->make();
+        if (! $this->signature->hasName()) {
+            throw new \Exception('Command should have a name');
+        }
 
-		return $this->signature->getDescription();
-	}
+        return $this->signature->getName();
+    }
 
-	/**
-	 * Gets the signature of the command
-	 *
-	 * @return Signature
-	 */
-	final public function getSignature(): Signature
-	{
-		$this->make();
-		return $this->signature;
-	}
+    /**
+     * Gets the description of the command
+     *
+     * @return string
+     * @throws \Exception
+     */
+    final public function getDescription(): string
+    {
+        $this->make();
 
-	/**
-	 * Creates the signature of the command
-	 *
-	 * @throws \Exception
-	 */
-	final private function make()
-	{
-		if ($this->created) {
-			return;
-		}
+        return $this->signature->getDescription();
+    }
 
-		$signature = new Signature();
-		$signature->addOption(Option::create('help', 'h')->setDescription('Display the help message'));
-		$this->signature = $this->createSignature($signature);
+    /**
+     * Gets the signature of the command
+     *
+     * @return Signature
+     */
+    final public function getSignature(): Signature
+    {
+        $this->make();
+        return $this->signature;
+    }
 
-		if (! $this->signature->hasName()) {
-			throw new \Exception('Command should have a name');
-		}
+    /**
+     * Creates the signature of the command
+     *
+     * @throws \Exception
+     */
+    final private function make()
+    {
+        if ($this->created) {
+            return;
+        }
 
-		$this->created = true;
-	}
+        $signature = $this->app->get(Signature::class);
 
-	/**
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$this->outputHelpMessage($output);
-	}
+        $signature->addOption(Option::create('help', 'h')->setDescription('Display the help message'));
+        $this->signature = $this->createSignature($signature);
 
-	/**
-	 * Runs the command
-	 *
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 */
-	final public function run(InputInterface $input, OutputInterface $output)
-	{
-		$input->setSignature($this->getSignature());
+        if (! $this->signature->hasName()) {
+            throw new \Exception('Command should have a name');
+        }
 
-		$showHelpMessage = (bool) $input->getOption('help');
+        $this->created = true;
+    }
 
-		if ($showHelpMessage && ! $input->hasSubCommand()) {
-			$this->outputHelpMessage($output);
-			return;
-		}
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->outputHelpMessage($output);
+    }
 
-		if ($input->hasSubCommand()) {
-			$command = $this->signature->getSubCommand($input->getSubCommand());
-			$command->run($input, $output);
-			return;
-		}
+    /**
+     * Runs the command
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    final public function run(InputInterface $input, OutputInterface $output)
+    {
+        $input->setSignature($this->getSignature());
 
-		$input->validate();
+        $showHelpMessage = (bool) $input->getOption('help');
 
-		$this->execute($input, $output);
-	}
+        if ($showHelpMessage && ! $input->hasSubCommand()) {
+            $this->outputHelpMessage($output);
+            return;
+        }
 
-	/**
-	 * Output an auto-generated help message
-	 *
-	 * @param OutputInterface $output
-	 */
-	public function outputHelpMessage(OutputInterface $output)
-	{
-		if ($this->getDescription()) {
-			$output->writeLine(ucfirst($this->getName()).':', OutputInterface::TYPE_WARNING);
-			$output->writeLine($this->getDescription());
-		}
+        if ($input->hasSubCommand()) {
+            $command = $this->signature->getSubCommand($input->getSubCommand());
+            $command->run($input, $output);
+            return;
+        }
 
-		$output->newline();
+        $input->validate();
 
-		$commands = $this->signature->getSubCommands();
-		ksort($commands);
-		$arguments = $this->signature->getArguments();
-		$options = $this->signature->getOptions();
+        $this->execute($input, $output);
+    }
 
-		$output->writeLine('Usage:', OutputInterface::TYPE_WARNING);
+    /**
+     * Output an auto-generated help message
+     *
+     * @param OutputInterface $output
+     */
+    public function outputHelpMessage(OutputInterface $output)
+    {
+        if ($this->getDescription()) {
+            $output->writeLine(ucfirst($this->getName()).':', OutputInterface::TYPE_WARNING);
+            $output->writeLine($this->getDescription());
+        }
 
-		$output->write($this->getName());
-		if (count($commands)) {
-			$output->write(' [command]');
-		}
+        $output->newline();
 
-		if (count($arguments)) {
-			foreach ($arguments as $argument) {
-				$output->write(' <'.$argument->getName().'>');
-			}
-		}
+        $commands = $this->signature->getSubCommands();
+        ksort($commands);
+        $arguments = $this->signature->getArguments();
+        $options = $this->signature->getOptions();
 
-		if (count($options)) {
-			$output->write(' [options]');
-		}
+        $output->writeLine('Usage:', OutputInterface::TYPE_WARNING);
 
-		$output->newline();
-		$output->newline();
+        $output->write($this->getName());
+        if (count($commands)) {
+            $output->write(' [command]');
+        }
 
-		// Output available commands
-		if (count($commands)) {
-			$output->writeLine('Available commands:', OutputInterface::TYPE_WARNING);
+        if (count($arguments)) {
+            foreach ($arguments as $argument) {
+                $output->write(' <'.$argument->getName().'>');
+            }
+        }
 
-			foreach ($commands as $command) {
-				$output->write(str_pad($command->getName(), 20), OutputInterface::TYPE_INFO);
-				$output->write($command->getDescription(), OutputInterface::TYPE_INFO);
-				$output->newline();
+        if (count($options)) {
+            $output->write(' [options]');
+        }
 
-				$subCommands = $command->getSignature()->getSubCommands();
-				ksort($subCommands);
+        $output->newline();
+        $output->newline();
 
-				foreach ($subCommands as $subCommand) {
-					$output->write(' '.str_pad($subCommand->getName(), 19), OutputInterface::TYPE_PLAIN);
-					$output->write($subCommand->getDescription());
-					$output->newline();
-				}
-			}
+        // Output available commands
+        if (count($commands)) {
+            $output->writeLine('Available commands:', OutputInterface::TYPE_WARNING);
 
-			$output->newline();
-		}
+            foreach ($commands as $command) {
+                $output->write(str_pad($command->getName(), 20), OutputInterface::TYPE_INFO);
+                $output->write($command->getDescription(), OutputInterface::TYPE_INFO);
+                $output->newline();
 
-		// Output available arguments
-		if (count($arguments)) {
-			$output->writeLine('Arguments:', OutputInterface::TYPE_WARNING);
+                $subCommands = $command->getSignature()->getSubCommands();
+                ksort($subCommands);
 
-			foreach ($arguments as $argument) {
-				$output->write(str_pad($argument->getName(), 20), OutputInterface::TYPE_INFO);
-				$output->write($argument->getDescription());
-				$output->newline();
-			}
+                foreach ($subCommands as $subCommand) {
+                    $output->write(' '.str_pad($subCommand->getName(), 19), OutputInterface::TYPE_PLAIN);
+                    $output->write($subCommand->getDescription());
+                    $output->newline();
+                }
+            }
 
-			$output->newline();
-		}
+            $output->newline();
+        }
 
-		// Output available options
-		if (count($options)) {
-			$output->writeLine('Options:', OutputInterface::TYPE_WARNING);
+        // Output available arguments
+        if (count($arguments)) {
+            $output->writeLine('Arguments:', OutputInterface::TYPE_WARNING);
 
-			foreach ($options as $option) {
-				$output->write(str_pad('-'.$option->getAlias().', --'.$option->getName(), 20), OutputInterface::TYPE_INFO);
-				$output->write($option->getDescription());
-				$output->newline();
-			}
+            foreach ($arguments as $argument) {
+                $output->write(str_pad($argument->getName(), 20), OutputInterface::TYPE_INFO);
+                $output->write($argument->getDescription());
+                $output->newline();
+            }
 
-			$output->newline();
-		}
-	}
+            $output->newline();
+        }
+
+        // Output available options
+        if (count($options)) {
+            $output->writeLine('Options:', OutputInterface::TYPE_WARNING);
+
+            foreach ($options as $option) {
+                $output->write(str_pad('-'.$option->getAlias().', --'.$option->getName(), 20), OutputInterface::TYPE_INFO);
+                $output->write($option->getDescription());
+                $output->newline();
+            }
+
+            $output->newline();
+        }
+    }
 }

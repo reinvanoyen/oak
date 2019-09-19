@@ -2,175 +2,195 @@
 
 namespace Oak\Console\Command;
 
+use Oak\Contracts\Container\ContainerInterface;
+
 /**
  * Class Signature
  * @package Oak\Console\Command
  */
 class Signature
 {
-	/**
-	 * The name of the command
-	 *
-	 * @var string
-	 */
-	private $name;
+    /**
+     * @var ContainerInterface $app
+     */
+    private $app;
 
-	/**
-	 * The description of the command
-	 *
-	 * @var string
-	 */
-	private $description = '';
+    /**
+     * The name of the command
+     *
+     * @var string
+     */
+    private $name;
 
-	/**
-	 * An array holding the arguments
-	 *
-	 * @var array
-	 */
-	private $arguments = [];
+    /**
+     * The description of the command
+     *
+     * @var string
+     */
+    private $description = '';
 
-	/**
-	 * An array holding the possible options
-	 *
-	 * @var array
-	 */
-	private $options = [];
+    /**
+     * An array holding the arguments
+     *
+     * @var array
+     */
+    private $arguments = [];
 
-	/**
-	 * An array holding the subcommands
-	 *
-	 * @var array
-	 */
-	private $subCommands = [];
+    /**
+     * An array holding the possible options
+     *
+     * @var array
+     */
+    private $options = [];
 
-	/**
-	 * Gets the name of the command
-	 *
-	 * @return string
-	 */
-	public function getName(): string
-	{
-		return $this->name;
-	}
+    /**
+     * An array holding the subcommands
+     *
+     * @var array
+     */
+    private $subCommands = [];
 
-	/**
-	 * Sets the name of the command
-	 *
-	 * @param string $name
-	 */
-	public function setName(string $name)
-	{
-		$this->name = $name;
-		return $this;
-	}
+    /**
+     * Signature constructor.
+     * @param ContainerInterface $app
+     */
+    public function __construct(ContainerInterface $app)
+    {
+        $this->app = $app;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getDescription(): string
-	{
-		return $this->description;
-	}
+    /**
+     * Gets the name of the command
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-	/**
-	 * @param string $description
-	 */
-	public function setDescription(string $description)
-	{
-		$this->description = $description;
-		return $this;
-	}
+    /**
+     * Sets the name of the command
+     *
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+        return $this;
+    }
 
-	/**
-	 * Checks if the command has a name
-	 *
-	 * @return bool
-	 */
-	public function hasName(): bool
-	{
-		return (bool) $this->name;
-	}
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
 
-	/**
-	 * Add an argument
-	 *
-	 * @param Argument $argument
-	 */
-	public function addArgument(Argument $argument)
-	{
-		$this->arguments[] = $argument;
-		return $this;
-	}
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+        return $this;
+    }
 
-	/**
-	 * Gets all arguments
-	 *
-	 * @return array
-	 */
-	public function getArguments(): array
-	{
-		return $this->arguments;
-	}
+    /**
+     * Checks if the command has a name
+     *
+     * @return bool
+     */
+    public function hasName(): bool
+    {
+        return (bool) $this->name;
+    }
 
-	/**
-	 * Add a subcommand
-	 *
-	 * @param Command $command
-	 */
-	public function addSubCommand(Command $command)
-	{
-		$this->subCommands[$command->getName()] = $command;
-		return $this;
-	}
+    /**
+     * Add an argument
+     *
+     * @param Argument $argument
+     */
+    public function addArgument(Argument $argument)
+    {
+        $this->arguments[] = $argument;
+        return $this;
+    }
 
-	/**
-	 * Get subcommand by name
-	 *
-	 * @param string $name
-	 * @return Command
-	 */
-	public function getSubCommand(string $name): Command
-	{
-		return $this->subCommands[$name];
-	}
+    /**
+     * Gets all arguments
+     *
+     * @return array
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
 
-	/**
-	 * Gets all subcommands
-	 *
-	 * @return array
-	 */
-	public function getSubCommands(): array
-	{
-		return $this->subCommands;
-	}
+    /**
+     * Add a subcommand
+     *
+     * @param $command
+     */
+    public function addSubCommand($command)
+    {
+        if (! $command instanceof Command) {
+            $command = $this->app->get($command);
+        }
 
-	/**
-	 * @param string $name
-	 * @return bool
-	 */
-	public function hasSubCommand(string $name): bool
-	{
-		return isset($this->subCommands[$name]);
-	}
+        $this->subCommands[$command->getName()] = $command;
+        return $this;
+    }
 
-	/**
-	 * Add an option
-	 *
-	 * @param Option $option
-	 */
-	public function addOption(Option $option)
-	{
-		$this->options[] = $option;
-		return $this;
-	}
+    /**
+     * Get subcommand by name
+     *
+     * @param string $name
+     * @return Command
+     */
+    public function getSubCommand(string $name): Command
+    {
+        return $this->subCommands[$name];
+    }
 
-	/**
-	 * Gets all options
-	 *
-	 * @return array
-	 */
-	public function getOptions(): array
-	{
-		return $this->options;
-	}
+    /**
+     * Gets all subcommands
+     *
+     * @return array
+     */
+    public function getSubCommands(): array
+    {
+        return $this->subCommands;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasSubCommand(string $name): bool
+    {
+        return isset($this->subCommands[$name]);
+    }
+
+    /**
+     * Add an option
+     *
+     * @param Option $option
+     */
+    public function addOption(Option $option)
+    {
+        $this->options[] = $option;
+        return $this;
+    }
+
+    /**
+     * Gets all options
+     *
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
 }

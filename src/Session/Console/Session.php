@@ -11,9 +11,9 @@ class Session extends Command
 	{
 		return $signature
 			->setName('session')
-			->addSubCommand(new Status())
-			->addSubCommand(new GarbageCollect())
-			->addSubCommand(new ClearAll())
+			->addSubCommand(Status::class)
+			->addSubCommand(GarbageCollect::class)
+			->addSubCommand(ClearAll::class)
 		;
 	}
 }
