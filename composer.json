@@ -1,5 +1,6 @@
 {
     "name": "reinvanoyen/oak",
+    "minimum-stability": "dev",
     "description": "Simple PHP building block framework",
     "keywords": ["container", "facade", "dependency injection", "framework", "library"],
     "type": "library",
