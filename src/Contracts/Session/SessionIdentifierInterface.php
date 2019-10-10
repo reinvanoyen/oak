@@ -8,9 +8,9 @@ namespace Oak\Contracts\Session;
  */
 interface SessionIdentifierInterface
 {
-	/**
-	 * @param int $length
-	 * @return string
-	 */
-	public function generate(int $length): string;
+    /**
+     * @param int $length
+     * @return string
+     */
+    public function generate(int $length): string;
 }

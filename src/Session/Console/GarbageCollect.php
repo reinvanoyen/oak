@@ -10,20 +10,20 @@ use Oak\Contracts\Console\OutputInterface;
 
 class GarbageCollect extends Command
 {
-	protected function createSignature(Signature $signature): Signature
-	{
-		return $signature
-			->setName('garbage-collect')
-			->setDescription('Garbage collect all sessions')
-			->addArgument(Argument::create('maxLifetime')->setDescription('Max lifetime in seconds'))
-			;
-	}
+    protected function createSignature(Signature $signature): Signature
+    {
+        return $signature
+            ->setName('garbage-collect')
+            ->setDescription('Garbage collect all sessions')
+            ->addArgument(Argument::create('maxLifetime')->setDescription('Max lifetime in seconds'))
+            ;
+    }
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$sessionHandler = \Oak\Session\Facade\Session::getHandler();
-		$sessionHandler->gc((int) $input->getArgument('maxLifetime'));
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $sessionHandler = \Oak\Session\Facade\Session::getHandler();
+        $sessionHandler->gc((int) $input->getArgument('maxLifetime'));
 
-		$output->writeLine('Sessions successfully garbage collected');
-	}
+        $output->writeLine('Sessions successfully garbage collected');
+    }
 }

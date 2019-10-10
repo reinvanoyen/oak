@@ -7,8 +7,8 @@ use Oak\Facade;
 
 class Filesystem extends Facade
 {
-	protected static function getContract(): string
-	{
-		return FilesystemInterface::class;
-	}
+    protected static function getContract(): string
+    {
+        return FilesystemInterface::class;
+    }
 }

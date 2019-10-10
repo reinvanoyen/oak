@@ -8,13 +8,13 @@ use Oak\ServiceProvider;
 
 class DispatcherServiceProvider extends ServiceProvider
 {
-	public function boot(ContainerInterface $app)
-	{
-		//
-	}
+    public function boot(ContainerInterface $app)
+    {
+        //
+    }
 
-	public function register(ContainerInterface $app)
-	{
-		$app->singleton(DispatcherInterface::class, Dispatcher::class);
-	}
+    public function register(ContainerInterface $app)
+    {
+        $app->singleton(DispatcherInterface::class, Dispatcher::class);
+    }
 }

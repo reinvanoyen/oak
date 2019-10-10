@@ -9,7 +9,16 @@ class Repository implements RepositoryInterface
     /**
      * @var array $config
      */
-    private $config = [];
+    private $config;
+
+    /**
+     * Repository constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        $this->config = $config;
+    }
 
     /**
      * @param string $key
@@ -48,5 +57,13 @@ class Repository implements RepositoryInterface
     public function set(string $key, $value)
     {
         $this->config[$key] = $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function all(): array
+    {
+        return $this->config;
     }
 }

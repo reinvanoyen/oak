@@ -2,6 +2,7 @@
 
 namespace Oak\Logger;
 
+use Oak\Config\Facade\Config;
 use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Contracts\Logger\LoggerInterface;
 
@@ -11,32 +12,32 @@ use Oak\Contracts\Logger\LoggerInterface;
  */
 class FileLogger implements LoggerInterface
 {
-	/**
-	 * @var string $filename
-	 */
-	private $filename;
+    /**
+     * @var string $filename
+     */
+    private $filename;
 
-	/**
-	 * @var FilesystemInterface $filesystem
-	 */
-	private $filesystem;
+    /**
+     * @var FilesystemInterface $filesystem
+     */
+    private $filesystem;
 
-	/**
-	 * FileLogger constructor.
-	 * @param string $filename
-	 * @param FilesystemInterface $filesystem
-	 */
-	public function __construct(string $filename, FilesystemInterface $filesystem)
-	{
-		$this->filename = $filename;
-		$this->filesystem = $filesystem;
-	}
+    /**
+     * FileLogger constructor.
+     * @param string $filename
+     * @param FilesystemInterface $filesystem
+     */
+    public function __construct(string $filename, FilesystemInterface $filesystem)
+    {
+        $this->filename = $filename;
+        $this->filesystem = $filesystem;
+    }
 
-	/**
-	 * @param string $text
-	 */
-	public function log(string $text)
-	{
-		$this->filesystem->append($this->filename, date('d/m/Y H:i').' - '.$text."\n");
-	}
+    /**
+     * @param string $text
+     */
+    public function log(string $text)
+    {
+        $this->filesystem->append($this->filename, date(Config::get('logger.date_format', 'd/m/Y H:i')).' - '.$text."\n");
+    }
 }

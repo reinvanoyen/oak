@@ -7,8 +7,8 @@ use Oak\Facade;
 
 class Cookie extends Facade
 {
-	protected static function getContract(): string
-	{
-		return CookieInterface::class;
-	}
+    protected static function getContract(): string
+    {
+        return CookieInterface::class;
+    }
 }

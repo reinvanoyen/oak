@@ -1,18 +1,18 @@
 <?php
 
-namespace Oak\Filesystem\Console;
+namespace Oak\Config\Console;
 
 use Oak\Console\Command\Command;
 use Oak\Console\Command\Signature;
 
-class Filesystem extends Command
+class Config extends Command
 {
     protected function createSignature(Signature $signature): Signature
     {
         return $signature
-            ->setName('fs')
-            ->addSubCommand(Directories::class)
-            ->addSubCommand(Files::class)
+            ->setName('config')
+            ->addSubCommand(Cache::class)
+            ->addSubCommand(ClearCache::class)
         ;
     }
 }

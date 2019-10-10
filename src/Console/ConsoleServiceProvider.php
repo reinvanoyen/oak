@@ -16,17 +16,17 @@ use Oak\ServiceProvider;
  */
 class ConsoleServiceProvider extends ServiceProvider
 {
-	public function boot(ContainerInterface $app)
-	{
-		// TODO: Implement boot() method.
-	}
+    public function boot(ContainerInterface $app)
+    {
+        // TODO: Implement boot() method.
+    }
 
-	public function register(ContainerInterface $app)
-	{
-		// Set the console kernel
-		$app->instance(ContainerInterface::class, $app);
-		$app->singleton(KernelInterface::class, Kernel::class);
-		$app->set(InputInterface::class, ConsoleInput::class);
-		$app->set(OutputInterface::class, ConsoleOutput::class);
-	}
+    public function register(ContainerInterface $app)
+    {
+        // Set the console kernel
+        $app->instance(ContainerInterface::class, $app);
+        $app->singleton(KernelInterface::class, Kernel::class);
+        $app->set(InputInterface::class, ConsoleInput::class);
+        $app->set(OutputInterface::class, ConsoleOutput::class);
+    }
 }

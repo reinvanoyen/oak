@@ -7,8 +7,8 @@ use Oak\Facade;
 
 class Dispatcher extends Facade
 {
-	protected static function getContract(): string
-	{
-		return DispatcherInterface::class;
-	}
+    protected static function getContract(): string
+    {
+        return DispatcherInterface::class;
+    }
 }

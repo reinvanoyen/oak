@@ -10,24 +10,24 @@ use Oak\Contracts\Dispatcher\EventInterface;
  */
 class Event implements EventInterface
 {
-	/**
-	 * @var bool $propagationStopped
-	 */
-	private $propagationStopped = false;
+    /**
+     * @var bool $propagationStopped
+     */
+    private $propagationStopped = false;
 
-	/**
-	 * @return bool
-	 */
-	public function isPropagationStopped(): bool
-	{
-		return $this->propagationStopped;
-	}
+    /**
+     * @return bool
+     */
+    public function isPropagationStopped(): bool
+    {
+        return $this->propagationStopped;
+    }
 
-	/**
-	 * @return mixed|void
-	 */
-	public function stopPropagation()
-	{
-		$this->propagationStopped = true;
-	}
+    /**
+     * @return mixed|void
+     */
+    public function stopPropagation()
+    {
+        $this->propagationStopped = true;
+    }
 }

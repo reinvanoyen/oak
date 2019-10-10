@@ -5,6 +5,12 @@ namespace Oak\Contracts\Config;
 interface RepositoryInterface
 {
     /**
+     * RepositoryInterface constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = []);
+
+    /**
      * @param string $key
      * @param null $default
      * @return mixed
@@ -23,4 +29,9 @@ interface RepositoryInterface
      * @return mixed
      */
     public function set(string $key, $value);
+
+    /**
+     * @return array
+     */
+    public function all(): array;
 }

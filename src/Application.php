@@ -104,6 +104,7 @@ class Application extends Container
             $this->bootServiceProvider($this->lazyProviders[$key]);
             unset($this->lazyProviders[$key]);
         }
+
         return parent::get($key);
     }
 

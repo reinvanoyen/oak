@@ -2,54 +2,56 @@
 
 namespace Oak\Session;
 
+use Oak\Config\Facade\Config;
 use Oak\Console\Facade\Console;
+use Oak\Contracts\Cookie\CookieInterface;
 use Oak\Contracts\Session\SessionIdentifierInterface;
 use Oak\ServiceProvider;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Filesystem\FilesystemInterface;
-use Oak\Cookie\Facade\Cookie;
 
 class SessionServiceProvider extends ServiceProvider
 {
-	public function register(ContainerInterface $app)
-	{
-		$app->singleton(SessionIdentifierInterface::class, SessionIdentifier::class);
+    public function register(ContainerInterface $app)
+    {
+        $app->singleton(SessionIdentifierInterface::class, SessionIdentifier::class);
 
-		$app->singleton(\SessionHandlerInterface::class, function() use ($app) {
-			return new FileSessionHandler($app->get(FilesystemInterface::class), 'cache/sessions');
-		});
+        $app->singleton(\SessionHandlerInterface::class, function() use ($app) {
+            return new FileSessionHandler($app->get(FilesystemInterface::class), Config::get('session.path', 'cache/sessions'));
+        });
 
-		$app->singleton(Session::class, function () use ($app) {
-			return new Session($app->get(\SessionHandlerInterface::class), 'oak_app');
-		});
+        $app->singleton(Session::class, function () use ($app) {
+            return new Session($app->get(\SessionHandlerInterface::class), Config::get('session.name', 'oak_app'));
+        });
+    }
 
-		$app->set(\Oak\Session\Console\Session::class, \Oak\Session\Console\Session::class);
-	}
+    public function boot(ContainerInterface $app)
+    {
+        $session = $app->get(Session::class);
+        $cookie = $app->get(CookieInterface::class);
 
-	public function boot(ContainerInterface $app)
-	{
-		$session = $app->get(Session::class);
+        // Garbage collection lottery
+        if (rand(0, 1000) === 1) {
+            $session->getHandler()->gc(1000);
+        }
 
-		// Garbage collection lottery
-		if (rand(0, 1000) === 1) {
-			$session->getHandler()->gc(1000);
-		}
+        // Set session cookie
+        $cookieName = Config::get('session.cookie_prefix', 'session').'_'.$session->getName();
 
-		// Set session cookie
-		$cookieName = 'session_'.$session->getName();
+        if (! $cookie->has($cookieName)) {
 
-		if (! Cookie::has($cookieName)) {
+            // No session id found, so we generate one
+            $sessionId = $app->get(SessionIdentifierInterface::class)->generate(Config::get('session.identifier_length', 40));
 
-			// No session id found, so we generate one
-			$sessionId = $app->get(SessionIdentifierInterface::class)->generate(40);
+            // Set the id in the cookie
+            $cookie->set($cookieName, $sessionId);
+        }
 
-			// Set the id in the cookie
-			Cookie::set($cookieName, $sessionId);
-		}
+        $session->setId($cookie->get($cookieName));
 
-		$session->setId(Cookie::get($cookieName));
-
-		// Register console command
-		Console::registerCommand(\Oak\Session\Console\Session::class);
-	}
+        // Register console command
+        if ($app->isRunningInConsole()) {
+            Console::registerCommand(\Oak\Session\Console\Session::class);
+        }
+    }
 }
