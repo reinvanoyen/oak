@@ -12,8 +12,18 @@
 
 #### Config
 
-Documentation coming soon
+```php
+<?php
 
+use Oak\Config\Facade\Config;
+
+Config::set('package', [
+  'client_id' => '123',
+  'client_secret' => 'F1jK4s5mPs9s1_sd1wpalnbs5H1',
+]);
+
+echo Config::get('package.client_secret'); // F1jK4s5mPs9s1_sd1wpalnbs5H1
+```
 #### Console
 
 Documentation coming soon
@@ -28,6 +38,7 @@ Documentation coming soon
 
 ```php
 <?php
+
 use Oak\Cookie\Facade\Cookie;
 
 Cookie::set('key', 'value');
@@ -43,7 +54,18 @@ path | /
 
 #### Dispatcher
 
-Documentation coming soon
+```php
+<?php
+
+use Oak\Dispatcher\Facade\Dispatcher;
+
+Dispatcher::addListener('created', function($event) {
+  echo 'Creation happened!';
+});
+
+Dispatcher::dispatch('created', new Event());
+
+```
 
 #### Filesystem
 
@@ -55,6 +77,7 @@ Documentation coming soon
 
 ```php
 <?php
+
 use Oak\Logger\Facade\Logger;
 
 Logger::log('This message will be logged');
@@ -73,6 +96,7 @@ date_format | d/m/Y H:i
 
 ```php
 <?php
+
 use Oak\Session\Facade\Session;
 
 Session::set('key', 'value');
