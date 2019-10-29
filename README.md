@@ -24,6 +24,15 @@ Config::set('package', [
 
 echo Config::get('package.client_secret'); // F1jK4s5mPs9s1_sd1wpalnbs5H1
 ```
+
+##### Config commands
+```ssh
+php oak config clear-cache
+```
+```ssh
+php oak config cache
+```
+
 #### Console
 
 Documentation coming soon
@@ -51,6 +60,8 @@ echo Cookie::get('key'); // value
 Name | Default
 ---- | -------
 path | /
+secure | false
+http_only | true
 
 #### Dispatcher
 
