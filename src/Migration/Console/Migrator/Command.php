@@ -1,33 +1,42 @@
 <?php
 
-namespace Oak\Migration\Console;
+namespace Oak\Migration\Console\Migrator;
 
 use Oak\Console\Command\Signature;
 use Oak\Contracts\Console\InputInterface;
 use Oak\Contracts\Console\OutputInterface;
+use Oak\Contracts\Container\ContainerInterface;
 use Oak\Migration\Migrator;
 
 class Command extends MigrateCommand
 {
+    /**
+     * @var string $name
+     */
     private $name;
 
-    public function __construct(string $name, Migrator $migrator)
+    /**
+     * Command constructor.
+     * @param string $name
+     * @param Migrator $migrator
+     */
+    public function __construct(string $name, Migrator $migrator, ContainerInterface $app)
     {
         $this->name = $name;
-        parent::__construct($migrator);
+        parent::__construct($migrator, $app);
     }
 
     protected function createSignature(Signature $signature): Signature
     {
         return $signature
             ->setName($this->name)
-            ->setDescription('Migration CLI tool')
-            ->addSubCommand(new Migrate($this->getMigrator()))
-            ->addSubCommand(new RollTo($this->getMigrator()))
-            ->addSubCommand(new Update($this->getMigrator()))
-            ->addSubCommand(new Downdate($this->getMigrator()))
-            ->addSubCommand(new Reset($this->getMigrator()))
-            ->addSubCommand(new Version($this->getMigrator()))
+            ->setDescription($this->name.' migrator')
+            ->addSubCommand(new Migrate($this->getMigrator(), $this->app))
+            ->addSubCommand(new RollTo($this->getMigrator(), $this->app))
+            ->addSubCommand(new Update($this->getMigrator(), $this->app))
+            ->addSubCommand(new Downdate($this->getMigrator(), $this->app))
+            ->addSubCommand(new Reset($this->getMigrator(), $this->app))
+            ->addSubCommand(new Version($this->getMigrator(), $this->app))
         ;
     }
 

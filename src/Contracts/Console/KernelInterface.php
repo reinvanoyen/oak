@@ -8,5 +8,5 @@ namespace Oak\Contracts\Console;
  */
 interface KernelInterface
 {
-	public function handle(InputInterface $input, OutputInterface $output);
+    public function handle(InputInterface $input, OutputInterface $output);
 }

@@ -2,12 +2,23 @@
 
 namespace Oak\Migration;
 
+use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Migration\MigrationLoggerInterface;
 use Oak\Contracts\Migration\RevisionInterface;
 use Oak\Contracts\Migration\VersionStorageInterface;
 
 class Migrator
 {
+    /**
+     * @var string $name
+     */
+    private $name;
+
+    /**
+     * @var ContainerInterface $app
+     */
+    private $app;
+
     /**
      * Handles storing the version
      *
@@ -38,16 +49,23 @@ class Migrator
 
     /**
      * Migrator constructor.
-     *
-     * @param VersionStorageInterface $versionStore
+     * @param VersionStorageInterface $versionStorage
+     * @param MigrationLoggerInterface|null $migrationLogger
      */
-    public function __construct(VersionStorageInterface $versionStorage, MigrationLoggerInterface $migrationLogger = null)
+    public function __construct(string $name, VersionStorageInterface $versionStorage, MigrationLoggerInterface $migrationLogger, ContainerInterface $app)
     {
+        $this->name = $name;
         $this->versionStorage = $versionStorage;
+        $this->migrationLogger = $migrationLogger;
+        $this->app = $app;
+    }
 
-        if ($migrationLogger) {
-            $this->migrationLogger = $migrationLogger;
-        }
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -87,7 +105,7 @@ class Migrator
      */
     public function update()
     {
-        $nextVersionNumber = $this->getClampedVersion($this->versionStorage->get()+1);
+        $nextVersionNumber = $this->getClampedVersion($this->versionStorage->get($this)+1);
         $nextRevision = $this->getRevisionByVersion($nextVersionNumber);
 
         if (! $nextRevision || $this->isUpToDateWith($nextVersionNumber)) {
@@ -96,11 +114,8 @@ class Migrator
 
         $nextRevision->up();
 
-        if ($this->migrationLogger) {
-            $this->migrationLogger->logUpdate($nextRevision);
-        }
-
-        $this->versionStorage->store($nextVersionNumber);
+        $this->migrationLogger->logUpdate($nextRevision);
+        $this->versionStorage->store($this, $nextVersionNumber);
     }
 
     /**
@@ -117,12 +132,10 @@ class Migrator
 
         $revision->down();
 
-        if ($this->migrationLogger) {
-            $this->migrationLogger->logDowndate($revision);
-        }
+        $this->migrationLogger->logDowndate($revision);
 
-        $version = $this->getClampedVersion($this->versionStorage->get()-1);
-        $this->versionStorage->store($version);
+        $version = $this->getClampedVersion($this->versionStorage->get($this)-1);
+        $this->versionStorage->store($this, $version);
     }
 
     /**
@@ -149,7 +162,7 @@ class Migrator
             return;
         }
 
-        $currentVersion = $this->versionStorage->get();
+        $currentVersion = $this->versionStorage->get($this);
 
         // Check whether we need to downdate
         if ($currentVersion > $version) {
@@ -172,7 +185,7 @@ class Migrator
      */
     public function getVersion(): int
     {
-        return $this->versionStorage->get();
+        return $this->versionStorage->get($this);
     }
 
     /**
@@ -193,19 +206,13 @@ class Migrator
      */
     private function isUpToDateWith(int $version): bool
     {
-        return ($this->versionStorage->get() === $version);
+        return ($this->versionStorage->get($this) === $version);
     }
 
     /**
-     * Check if we're up to date with the latest revision
-     *
-     * @return bool
+     * @param int $version
+     * @return int
      */
-    private function isUpToDate() : bool
-    {
-        return $this->isUpToDateWith($this->maxVersion);
-    }
-
     private function getClampedVersion(int $version): int
     {
         return max(min($version, $this->maxVersion), 0);
@@ -222,6 +229,11 @@ class Migrator
         $version = $this->getClampedVersion($version);
 
         if (isset($this->revisions[$version-1])) {
+
+            if (is_string($this->revisions[$version-1])) {
+                return $this->app->get($this->revisions[$version-1]);
+            }
+
             return $this->revisions[$version-1];
         }
 
@@ -235,6 +247,6 @@ class Migrator
      */
     private function getCurrentRevision(): ?RevisionInterface
     {
-        return $this->getRevisionByVersion($this->versionStorage->get());
+        return $this->getRevisionByVersion($this->versionStorage->get($this));
     }
 }

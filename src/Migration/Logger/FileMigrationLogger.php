@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Migration;
+namespace Hector\Migration\Logger;
 
 use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Contracts\Migration\MigrationLoggerInterface;

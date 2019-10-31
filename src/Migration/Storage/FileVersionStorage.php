@@ -1,9 +1,10 @@
 <?php
 
-namespace Hector\Migration;
+namespace Oak\Migration\Storage;
 
 use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Contracts\Migration\VersionStorageInterface;
+use Oak\Migration\Migrator;
 
 class FileVersionStorage implements VersionStorageInterface
 {
@@ -33,21 +34,19 @@ class FileVersionStorage implements VersionStorageInterface
     }
 
     /**
-     * Store the version to the file
-     *
+     * @param Migrator $migrator
      * @param int $version
      */
-    public function store(int $version)
+    public function store(Migrator $migrator, int $version)
     {
         $this->filesystem->put($this->filename, $version);
     }
 
     /**
-     * Get the version number from the file
-     *
+     * @param Migrator $migrator
      * @return int
      */
-    public function get(): int
+    public function get(Migrator $migrator): int
     {
         return (int) $this->filesystem->get($this->filename);
     }

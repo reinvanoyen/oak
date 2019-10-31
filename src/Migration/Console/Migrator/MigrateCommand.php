@@ -1,8 +1,9 @@
 <?php
 
-namespace Oak\Migration\Console;
+namespace Oak\Migration\Console\Migrator;
 
 use Oak\Console\Command\Command;
+use Oak\Contracts\Container\ContainerInterface;
 use Oak\Migration\Migrator;
 
 abstract class MigrateCommand extends Command
@@ -16,9 +17,10 @@ abstract class MigrateCommand extends Command
      * MigrateCommand constructor.
      * @param Migrator $migrator
      */
-    public function __construct(Migrator $migrator)
+    public function __construct(Migrator $migrator, ContainerInterface $app)
     {
         $this->migrator = $migrator;
+        parent::__construct($app);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oak\Migration\Console;
+namespace Oak\Migration\Console\Migrator;
 
 use Oak\Console\Command\Signature;
 use Oak\Contracts\Console\InputInterface;
