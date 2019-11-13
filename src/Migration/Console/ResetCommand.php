@@ -1,15 +1,16 @@
 <?php
 
-namespace Oak\Migration\Console\Manager;
+namespace Oak\Migration\Console;
 
 use Oak\Console\Command\Command;
+use Oak\Console\Command\Option;
 use Oak\Console\Command\Signature;
 use Oak\Contracts\Console\InputInterface;
 use Oak\Contracts\Console\OutputInterface;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Migration\MigrationManager;
 
-class StatusCommand extends Command
+class ResetCommand extends Command
 {
     /**
      * @var MigrationManager $manager
@@ -30,14 +31,28 @@ class StatusCommand extends Command
     protected function createSignature(Signature $signature): Signature
     {
         return $signature
-            ->setName('status')
+            ->setName('reset')
+            ->addOption(
+                Option::create('migrator', 'm')
+                    ->setDescription('Specify a specific migrator')
+            )
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         foreach ($this->manager->getMigrators() as $migrator) {
-            $output->writeLine($migrator->getName().' ('.$migrator->getVersion().'/'.$migrator->getMaxVersion().')', OutputInterface::TYPE_INFO);
+
+            if (
+                ! ($migratorName = $input->getOption('migrator')) ||
+                $migrator->getName() === $migratorName
+            ) {
+                $migrator->reset();
+
+                if ($migratorName) {
+                    break;
+                }
+            }
         }
     }
 }

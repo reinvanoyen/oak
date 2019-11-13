@@ -24,10 +24,9 @@ class Kernel extends Command implements KernelInterface
     private $registeredCommands = [];
 
     /**
-     * Handle the incoming input
-     *
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @throws \Exception
      */
     public function handle(InputInterface $input, OutputInterface $output)
     {
@@ -61,12 +60,13 @@ class Kernel extends Command implements KernelInterface
     {
         return $signature->setName('oak')
             ->addOption(Option::create('version', 'v')->setDescription('Display the version of Oak framework'))
-            ;
+        ;
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

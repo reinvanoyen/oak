@@ -23,7 +23,7 @@ interface InputInterface
 
 	public function getOptions();
 	public function getOption(string $name);
-	public function setOption(string $name, $value = true);
+	public function setOption(string $name, $value);
 
 	public function hasSubCommand(): bool;
 	public function getSubCommand();

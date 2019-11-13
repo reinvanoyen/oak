@@ -106,9 +106,9 @@ abstract class Input implements InputInterface
      * Sets an option
      *
      * @param string $name
-     * @param bool $value
+     * @param mixed $value
      */
-    public function setOption(string $name, $value = true)
+    public function setOption(string $name, $value)
     {
         $this->options[$name] = $value;
     }

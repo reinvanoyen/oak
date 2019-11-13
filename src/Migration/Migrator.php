@@ -49,8 +49,10 @@ class Migrator
 
     /**
      * Migrator constructor.
+     * @param string $name
      * @param VersionStorageInterface $versionStorage
-     * @param MigrationLoggerInterface|null $migrationLogger
+     * @param MigrationLoggerInterface $migrationLogger
+     * @param ContainerInterface $app
      */
     public function __construct(string $name, VersionStorageInterface $versionStorage, MigrationLoggerInterface $migrationLogger, ContainerInterface $app)
     {

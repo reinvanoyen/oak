@@ -62,29 +62,47 @@ class ConsoleInput extends Input
             }
         }
 
-        // First we parse out the options
+        // Then we parse out the options
         foreach ($this->getSignature()->getOptions() as $option) {
+
             $definitions = [
                 '-'.$option->getName(),
                 '--'.$option->getName(),
             ];
 
-            if ($option->getAlias()) {
-                $definitions[] = '-'.$option->getAlias();
-                $definitions[] = '--'.$option->getAlias();
+            if ($alias = $option->getAlias()) {
+                $definitions[] = '-'.$alias;
+                $definitions[] = '--'.$alias;
             }
 
             foreach ($definitions as $definition) {
                 $optionPosition = array_search($definition, $this->rawArguments);
+
                 if ($optionPosition !== false) {
+
+                    // We found the option in the list of given arguments
+                    if (
+                        isset($this->rawArguments[$optionPosition + 1]) &&
+                        substr($this->rawArguments[$optionPosition + 1], 0, strlen('-')) !== '-'
+                    ) {
+                        // We also found a value for the option
+                        // We remove the value of the option from the argument list
+                        $optionValue = $this->rawArguments[$optionPosition + 1];
+                        $this->setOption($option->getName(), $optionValue);
+                        array_splice($this->rawArguments, $optionPosition + 1, 1);
+
+                    } else {
+
+                        $this->setOption($option->getName(), $option->getDefault());
+                    }
+
                     array_splice($this->rawArguments, $optionPosition, 1);
-                    $this->setOption($option->getName());
                     break;
                 }
             }
         }
 
-        // Now we loop all arguments and me sure they are present
+        // Now we loop all arguments and make sure they are present
         foreach ($this->getSignature()->getArguments() as $position => $argument) {
             if (isset($this->rawArguments[$position])) {
                 $this->setArgument($argument->getName(), $this->rawArguments[$position]);

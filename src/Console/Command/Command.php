@@ -45,8 +45,6 @@ abstract class Command
     abstract protected function createSignature(Signature $signature): Signature;
 
     /**
-     * Gets the name of the command
-     *
      * @return string
      * @throws \Exception
      */
@@ -62,8 +60,6 @@ abstract class Command
     }
 
     /**
-     * Gets the description of the command
-     *
      * @return string
      * @throws \Exception
      */
@@ -75,9 +71,8 @@ abstract class Command
     }
 
     /**
-     * Gets the signature of the command
-     *
      * @return Signature
+     * @throws \Exception
      */
     final public function getSignature(): Signature
     {
@@ -111,6 +106,7 @@ abstract class Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -118,10 +114,9 @@ abstract class Command
     }
 
     /**
-     * Runs the command
-     *
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @throws \Exception
      */
     final public function run(InputInterface $input, OutputInterface $output)
     {
@@ -146,9 +141,8 @@ abstract class Command
     }
 
     /**
-     * Output an auto-generated help message
-     *
      * @param OutputInterface $output
+     * @throws \Exception
      */
     public function outputHelpMessage(OutputInterface $output)
     {

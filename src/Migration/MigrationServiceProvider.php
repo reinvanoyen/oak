@@ -5,7 +5,7 @@ namespace Oak\Migration;
 use Oak\Config\Facade\Config;
 use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Container\ContainerInterface;
-use Oak\Migration\Console\Manager\MigrationManagerCommand;
+use Oak\Migration\Console\MigrationCommand;
 use Oak\Migration\Logger\ConsoleMigrationLogger;
 use Oak\Migration\Storage\JsonVersionStorage;
 use Oak\ServiceProvider;
@@ -19,8 +19,9 @@ class MigrationServiceProvider extends ServiceProvider
     {
         if ($app->isRunningInConsole()) {
 
+            $app->set(MigrationCommand::class, MigrationCommand::class);
+
             $app->singleton(MigrationManager::class, MigrationManager::class);
-            $app->set(MigrationManagerCommand::class, MigrationManagerCommand::class);
             $app->set(Migrator::class, Migrator::class);
             $app->set(Command::class, Command::class);
             $app->set(MigrationLoggerInterface::class, ConsoleMigrationLogger::class);
@@ -37,7 +38,7 @@ class MigrationServiceProvider extends ServiceProvider
         if ($app->isRunningInConsole()) {
 
             $console = $app->get(KernelInterface::class);
-            $console->registerCommand(MigrationManagerCommand::class);
+            $console->registerCommand(MigrationCommand::class);
         }
     }
 }

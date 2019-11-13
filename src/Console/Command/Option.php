@@ -28,6 +28,11 @@ class Option
     private $description = '';
 
     /**
+     * @var $default
+     */
+    private $default = true;
+
+    /**
      * Option constructor.
      * @param string $name
      * @param string $alias
@@ -81,13 +86,30 @@ class Option
     }
 
     /**
-     * Sets the description of the option
-     *
+     * @return bool
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+
+    /**
      * @param string $description
+     * @return $this
      */
     public function setDescription(string $description)
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @param $default
+     * @return $this
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
         return $this;
     }
 }
