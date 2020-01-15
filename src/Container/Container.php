@@ -2,6 +2,7 @@
 
 namespace Oak\Container;
 
+use Exception;
 use Oak\Contracts\Container\ContainerInterface;
 use ReflectionClass;
 
@@ -33,6 +34,11 @@ class Container implements ContainerInterface
     private $instances = [];
 
     /**
+     * @var array
+     */
+    private $arguments = [];
+
+    /**
      * Stores a implementation in the container for the given key
      *
      * @param string $key
@@ -41,6 +47,17 @@ class Container implements ContainerInterface
     public function set(string $contract, $implementation)
     {
         $this->contracts[$contract] = $implementation;
+    }
+
+    /**
+     * Checks if the container has a value by a given contract
+     *
+     * @param string $contract
+     * @return bool
+     */
+    public function has(string $contract): bool
+    {
+        return isset($this->contracts[$contract]);
     }
 
     /**
@@ -71,6 +88,7 @@ class Container implements ContainerInterface
      * Retreives a value from the container by a given contract
      *
      * @param string $contract
+     * @return mixed
      * @throws \Exception
      */
     public function get(string $contract)
@@ -95,6 +113,20 @@ class Container implements ContainerInterface
 
     /**
      * @param string $contract
+     * @param string $arg
+     * @param $value
+     */
+    public function whenAsksGive(string $contract, string $argument, $value)
+    {
+        if (! isset($this->arguments[$contract])) {
+            $this->arguments[$contract] = [];
+        }
+
+        $this->arguments[$contract][$argument] = $value;
+    }
+
+    /**
+     * @param string $contract
      * @param array $arguments
      * @return mixed
      * @throws \Exception
@@ -102,17 +134,6 @@ class Container implements ContainerInterface
     public function getWith(string $contract, array $arguments)
     {
         return $this->create($contract, $arguments);
-    }
-
-    /**
-     * Checks if the container has a value by a given contract
-     *
-     * @param string $contract
-     * @return bool
-     */
-    public function has(string $contract): bool
-    {
-        return isset($this->contracts[$contract]);
     }
 
     /**
@@ -135,6 +156,12 @@ class Container implements ContainerInterface
             $implementation = $this->contracts[$contract];
         }
 
+        // Check if we have to give this class some stored arguments
+        if (is_string($implementation) && isset($this->arguments[$implementation])) {
+            $arguments = array_merge($arguments, $this->arguments[$implementation]);
+        }
+
+        // Is it callable? Call it right away and return the results
         if (is_callable($implementation)) {
             return call_user_func($implementation, $this);
         }
@@ -156,16 +183,47 @@ class Container implements ContainerInterface
 
         foreach ($parameters as $parameter) {
 
-            // Check if the parameter was given
-            if (isset($arguments[$parameter->getName()])) {
-                $injections[] = $arguments[$parameter->getName()];
+            // Check if param is a class
+            if ($class = $parameter->getClass()) {
+
+                $className = $class->name;
+
+                // Check if it was explicitely given as an argument
+                if (isset($arguments[$className])) {
+
+                    // Get the explicit argument from the container
+                    $injections[] = $this->get($arguments[$className]);
+                    continue;
+
+                }
+
+                // Get the class from the container
+                $injections[] = $this->get($className);
+
                 continue;
+
+            } else {
+
+                $argName = $parameter->getName();
+
+                // Check if the argument was explicitely given
+                if (isset($arguments[$argName])) {
+
+                    $injections[] = $arguments[$argName];
+                    continue;
+
+                }
+
+                // Check if the argument has a default value
+                if($parameter->isDefaultValueAvailable()) {
+
+                    // Inject the default value
+                    $injections[] = $parameter->getDefaultValue();
+                    continue;
+                }
             }
 
-            // It's a dependency, so inject it
-            $class = $parameter->getClass()->name;
-
-            $injections[] = $this->get($class);
+            throw new Exception('Could not provide argument "'.$parameter->getName().'" to '.$contract);
         }
 
         return $reflect->newInstanceArgs($injections);
