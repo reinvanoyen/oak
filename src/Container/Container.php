@@ -212,6 +212,8 @@ class Container implements ContainerInterface
                     continue;
                 }
 
+                $injections[] = $this->get($className);
+
                 continue;
 
             } else {
