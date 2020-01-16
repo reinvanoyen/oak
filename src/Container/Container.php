@@ -198,7 +198,19 @@ class Container implements ContainerInterface
                 }
 
                 // Get the class from the container
-                $injections[] = $this->get($className);
+                if ($this->has($className)) {
+
+                    $injections[] = $this->get($className);
+                    continue;
+                }
+
+                // Check if the argument has a default value
+                if ($parameter->isDefaultValueAvailable()) {
+
+                    // Inject the default value (most probably null)
+                    $injections[] = $parameter->getDefaultValue();
+                    continue;
+                }
 
                 continue;
 
