@@ -15,7 +15,9 @@ class ConfigServiceProvider extends ServiceProvider
     {
         // Register Config command
         if ($app->isRunningInConsole()) {
-            $app->get(KernelInterface::class)->registerCommand(Config::class);
+            $app->get(KernelInterface::class)
+                ->registerCommand(Config::class)
+            ;
         }
     }
 
