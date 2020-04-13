@@ -1,6 +1,6 @@
 <?php
 
-namespace Rein\Http\Routing;
+namespace Oak\Http\Routing;
 
 trait HasRoutesTrait
 {
@@ -9,13 +9,7 @@ trait HasRoutesTrait
      */
     private $routes = [];
 
-    /**
-     * @param string $httpMethod
-     * @param string $pattern
-     * @param string $controller
-     * @param string $method
-     * @return Route
-     */
+
     private function registerRoute(string $httpMethod, string $pattern, string $controller, string $method): Route
     {
         if (! isset($this->routes[$httpMethod])) {

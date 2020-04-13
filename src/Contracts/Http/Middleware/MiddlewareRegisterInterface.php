@@ -1,6 +1,6 @@
 <?php
 
-namespace Rein\Http\Middleware\Contracts;
+namespace Oak\Contracts\Http\Middleware;
 
 interface MiddlewareRegisterInterface
 {

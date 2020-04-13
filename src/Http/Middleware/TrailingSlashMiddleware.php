@@ -1,30 +1,30 @@
 <?php
 
-namespace Rein\Http\Middleware;
+namespace Oak\Http\Middleware;
 
-use Closure;
-use Rein\Http\Middleware\Contracts\MiddlewareInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class TrailingSlashMiddleware implements MiddlewareInterface
 {
-    public function handle(Request $request, Response $response, Closure $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $uri = $request->getUri();
+        $path = $request->getUri()->getPath();
 
-        //Add/remove slash
-        if (strlen($uri) > 1) {
-            if (substr($uri, -1) !== '/' && !pathinfo($uri, PATHINFO_EXTENSION)) {
+        if (strlen($path) > 1) {
+            if (substr($path, -1) !== '/' && ! pathinfo($path, PATHINFO_EXTENSION)) {
 
-                $uri .= '/';
+                $response = $handler->handle($request);
+                $response = $response
+                    ->withStatus(301)
+                    ->withHeader('Location', $path.'/');
 
-                return new Response( $response->getContent(),301, [
-                    'location' => $uri,
-                ]);
+                return $response;
             }
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

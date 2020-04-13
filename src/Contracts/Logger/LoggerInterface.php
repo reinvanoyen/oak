@@ -8,8 +8,8 @@ namespace Oak\Contracts\Logger;
  */
 interface LoggerInterface
 {
-	/**
-	 * @param string $text
-	 */
-	public function log(string $text);
+    /**
+     * @param string $text
+     */
+    public function log(string $text);
 }

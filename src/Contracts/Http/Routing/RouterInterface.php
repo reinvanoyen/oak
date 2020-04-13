@@ -1,11 +1,11 @@
 <?php
 
-namespace Rein\Http\Routing\Contracts;
+namespace Oak\Contracts\Http\Routing;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface RouterInterface
 {
-    public function dispatch(Request $request): Response;
+    public function dispatch(ServerRequestInterface $request): ResponseInterface;
 }

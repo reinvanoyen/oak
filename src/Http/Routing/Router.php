@@ -1,13 +1,15 @@
 <?php
 
-namespace Rein\Http\Routing;
+namespace Oak\Http\Routing;
 
+use Nyholm\Psr7\Response;
+use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Container\ContainerInterface;
-use Rein\Http\Middleware\Contracts\MiddlewareRegisterInterface;
-use Rein\Http\Middleware\MiddlewareRegisterTrait;
-use Rein\Http\Routing\Contracts\RouterInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Oak\Contracts\Http\Middleware\MiddlewareRegisterInterface;
+use Oak\Contracts\Http\Routing\RouterInterface;
+use Oak\Http\Middleware\MiddlewareRegisterTrait;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface, MiddlewareRegisterInterface
 {
@@ -20,31 +22,41 @@ class Router implements RouterInterface, MiddlewareRegisterInterface
     private $app;
 
     /**
+     * @var RepositoryInterface $config
+     */
+    private $config;
+
+    /**
      * Router constructor.
      * @param ContainerInterface $app
+     * @param RepositoryInterface $config
      */
-    public function __construct(ContainerInterface $app)
+    public function __construct(ContainerInterface $app, RepositoryInterface $config)
     {
         $this->app = $app;
+        $this->config = $config;
     }
 
     /**
-     * @param Request $request
-     * @return Response
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
      */
-    public function dispatch(Request $request): Response
+    public function dispatch(ServerRequestInterface $request): ResponseInterface
     {
-        $path = substr($request->getPathInfo(), 1);
+        $path = substr($request->getUri()->getPath(), strlen($this->config->get('http.path')));
+        $path = ltrim($path, '/');
+
         $method = $request->getMethod();
 
         $routes = $this->getRoutesByMethod($method);
 
         foreach ($routes as $route) {
             if ($route->matches($path)) {
-                return $route->execute($this->app, $request, new Response('', 200));
+                $response = $route->execute($this->app, $request, new Response(200));
+                return $response;
             }
         }
 
-        return new Response('', 404);
+        return new Response(404);
     }
 }

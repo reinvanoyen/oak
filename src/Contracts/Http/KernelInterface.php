@@ -1,10 +1,10 @@
 <?php
 
-namespace Rein\Http\Contracts;
+namespace Oak\Contracts\Http;
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface KernelInterface
 {
-    public function handle(Request $request);
+    public function handle(ServerRequestInterface $request);
 }

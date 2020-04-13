@@ -1,0 +1,43 @@
+<?php
+
+namespace Oak\Http;
+
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use Oak\Contracts\Container\ContainerInterface;
+use Oak\Contracts\Http\ResponseEmitterInterface;
+use Oak\Contracts\Http\Routing\RouterInterface;
+use Oak\Contracts\Http\KernelInterface;
+use Oak\Http\Routing\Router;
+use Oak\ServiceProvider;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+class HttpServiceProvider extends ServiceProvider
+{
+    public function boot(ContainerInterface $app)
+    {
+        //
+    }
+
+    public function register(ContainerInterface $app)
+    {
+        $app->singleton(RouterInterface::class, Router::class);
+        $app->singleton(KernelInterface::class, Kernel::class);
+        $app->set(ResponseEmitterInterface::class, ResponseEmitter::class);
+        $app->set(ResponseFactoryInterface::class, Psr17Factory::class);
+        $app->set(ServerRequestInterface::class, function($app) {
+
+            $psr17Factory = $app->get(ResponseFactoryInterface::class);
+
+            $creator = new ServerRequestCreator(
+                $psr17Factory, // ServerRequestFactory
+                $psr17Factory, // UriFactory
+                $psr17Factory, // UploadedFileFactory
+                $psr17Factory  // StreamFactory
+            );
+
+            return $creator->fromGlobals();
+        });
+    }
+}
