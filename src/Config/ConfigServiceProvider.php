@@ -26,13 +26,13 @@ class ConfigServiceProvider extends ServiceProvider
             $fs = $app->get(FilesystemInterface::class);
 
             // Check if the cache file exists
-            if ($fs->exists('cache/config.php')) {
+            if ($fs->exists($app->getCachePath().'config.php')) {
 
                 // It exists so we give back the config with all data from the cache
-                return new Repository(require 'cache/config.php');
+                return new Repository(require $app->getCachePath().'config.php');
             }
 
-            $files = $fs->files('config');
+            $files = $fs->files($app->getConfigPath());
 
             $repository = new Repository([]);
 

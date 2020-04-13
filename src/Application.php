@@ -2,6 +2,7 @@
 
 namespace Oak;
 
+use Dotenv\Dotenv;
 use Oak\Container\Container;
 
 /**
@@ -10,7 +11,7 @@ use Oak\Container\Container;
  */
 class Application extends Container
 {
-    const VERSION = '1.0.7';
+    const VERSION = '1.1.0';
 
     /**
      * @var bool $isBooted
@@ -28,10 +29,34 @@ class Application extends Container
     private $lazyProviders = [];
 
     /**
-     * Application constructor.
+     * @var string $envPath
      */
-    public function __construct()
+    private $envPath;
+
+    /**
+     * @var string $configPath
+     */
+    private $configPath;
+
+    /**
+     * @var string $cachePath
+     */
+    private $cachePath;
+
+    /**
+     * Application constructor.
+     * @param string $envPath
+     * @param string $configPath
+     * @param string $cachePath
+     */
+    public function __construct(string $envPath, string $configPath, string $cachePath)
     {
+        $this->envPath = $envPath;
+        $this->configPath = $configPath;
+        $this->cachePath = $cachePath;
+
+        $this->loadEnv();
+
         // We set this application as the container for the facade
         Facade::setContainer($this);
     }
@@ -145,5 +170,38 @@ class Application extends Container
     public function isRunningInConsole(): bool
     {
         return php_sapi_name() === 'cli';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnvPath(): string
+    {
+        return $this->envPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfigPath(): string
+    {
+        return $this->configPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCachePath(): string
+    {
+        return $this->cachePath;
+    }
+
+    /**
+     * Loads environment vars into the application
+     */
+    private function loadEnv()
+    {
+        $dotenv = Dotenv::createImmutable($this->getEnvPath());
+        $dotenv->load();
     }
 }
