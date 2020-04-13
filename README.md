@@ -50,7 +50,7 @@ $app->get(KernelInterface::class)->handle(
 );
 ```
 
-To use the HTTP component (PSR-7 & PSR-15 compliant), a similar method provided, but additionally you'll have to register the Config component...and since the Config component reads 
+To use the HTTP component (PSR-7 & PSR-15 compliant) you'll also have to register the Config component...and since the Config component reads 
 configuration values from the filesystem, you'll also have to register the Filesystem component:
 
 ```php
