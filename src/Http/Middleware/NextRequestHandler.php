@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-final class Next implements RequestHandlerInterface
+final class NextRequestHandler implements RequestHandlerInterface
 {
     /**
      * @var MiddlewareStack $middlewareStack
@@ -36,10 +36,13 @@ final class Next implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($this->middlewareStack->hasNext()) {
-            return $this->middlewareStack->process($request, $this);
+
+            $response = $this->middlewareStack->process($request, $this);
+            return $response;
         }
 
         // No more middleware to be processed, so we call our final core request handler
-        return $this->coreRequestHandler->handle($request);
+        $response = $this->coreRequestHandler->handle($request);
+        return $response;
     }
 }

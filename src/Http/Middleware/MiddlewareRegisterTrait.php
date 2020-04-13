@@ -1,6 +1,6 @@
 <?php
 
-namespace Rein\Http\Middleware;
+namespace Oak\Http\Middleware;
 
 trait MiddlewareRegisterTrait
 {

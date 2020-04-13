@@ -1,17 +1,17 @@
 <?php
 
-namespace Rein\Http\Routing;
+namespace Oak\Http\Routing;
 
 use Oak\Contracts\Container\ContainerInterface;
-use Rein\Http\Middleware\Contracts\MiddlewareRegisterInterface;
-use Rein\Http\Middleware\MiddlewareStackTrait;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Oak\Contracts\Http\Middleware\MiddlewareRegisterInterface;
+use Oak\Http\Middleware\CoreRequestHandler;
+use Oak\Http\Middleware\MiddlewareStack;
+use Oak\Http\Middleware\NextRequestHandler;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Route
 {
-    use MiddlewareStackTrait;
-
     /**
      * @var string $pattern
      */
@@ -33,6 +33,11 @@ class Route
     private $params = [];
 
     /**
+     * @var array $middleware
+     */
+    private $middleware = [];
+
+    /**
      * Route constructor.
      * @param MiddlewareRegisterInterface $middlewareRegister
      * @param string $pattern
@@ -48,12 +53,20 @@ class Route
     }
 
     /**
+     * @param array $middleware
+     */
+    public function middleware($middleware)
+    {
+        $this->middleware = $middleware;
+    }
+
+    /**
      * @param string $path
      * @return bool
      */
     public function matches(string $path)
     {
-        if(preg_match( '@^('.$this->pattern.')$@', $path, $this->params)) {
+        if(preg_match('@^('.$this->pattern.')$@', $path, $this->params)) {
 
             $this->params = array_filter($this->params, function ($key) {
                 return (! is_int($key));
@@ -67,28 +80,36 @@ class Route
 
     /**
      * @param ContainerInterface $app
-     * @param Request $request
-     * @param Response $response
-     * @return Response
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
-    public function execute(ContainerInterface $app, Request $request, Response $response): Response
+    public function execute(ContainerInterface $app, ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        return $this->runMiddlewareStack($app, $request, $response, function ($request, $response) use ($app) {
-
-            $controller = $app->getWith($this->controller, [
-                'request' => $request,
-                'response' => $response,
-            ]);
-
-            $output = call_user_func_array([$controller, $this->method], $this->params);
-
-            if ($output instanceof Response) {
-                return $output;
+        $middleware = [];
+        foreach ($this->middleware as $middlewareName) {
+            foreach ($this->middlewareRegister->getMiddleware($middlewareName) as $middlewareClass) {
+                $middleware[] = $app->get($middlewareClass);
             }
+        }
 
-            $response->setContent($output);
+        $controller = $app->getWith($this->controller, [
+            'request' => $request,
+            'response' => $response,
+        ]);
 
-            return $response;
-        });
+        $middlewareStack = new MiddlewareStack($middleware);
+
+        $coreRequestHandler = $app->getWith(CoreRequestHandler::class, [
+            'controller' => $controller,
+            'method' => $this->method,
+            'params' => $this->params,
+        ]);
+
+        $nextRequestHandler = new NextRequestHandler($middlewareStack, $coreRequestHandler);
+
+        $response = $nextRequestHandler->handle($request);
+
+        return $response;
     }
 }
