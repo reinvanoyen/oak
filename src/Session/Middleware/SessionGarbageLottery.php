@@ -41,7 +41,9 @@ class SessionGarbageLottery implements MiddlewareInterface
     {
         // Garbage collection lottery
         if (rand(0, $this->config->get('session.lottery', 200)) === 1) {
-            $this->session->getHandler()->gc($this->config->get('session.max_lifetime', 1000));
+            $this->session->getHandler()
+                ->gc($this->config->get('session.max_lifetime', 1000))
+            ;
         }
 
         return $handler->handle($request);

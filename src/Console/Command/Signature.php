@@ -44,7 +44,7 @@ class Signature
     private $options = [];
 
     /**
-     * An array holding the subcommands
+     * An array holding subcommands
      *
      * @var array
      */
@@ -73,6 +73,7 @@ class Signature
      * Sets the name of the command
      *
      * @param string $name
+     * @return Signature
      */
     public function setName(string $name)
     {

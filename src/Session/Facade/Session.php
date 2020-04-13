@@ -6,6 +6,9 @@ use Oak\Facade;
 
 class Session extends Facade
 {
+    /**
+     * @return string
+     */
     protected static function getContract(): string
     {
         return \Oak\Session\Session::class;

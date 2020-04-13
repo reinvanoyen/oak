@@ -62,6 +62,7 @@ class Argument
      * Sets the description of the argument
      *
      * @param string $description
+     * @return $this
      */
     public function setDescription(string $description)
     {

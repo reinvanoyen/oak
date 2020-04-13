@@ -11,10 +11,8 @@ class OakHeaderMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $handler->handle($request);
-
-        $response = $response->withHeader('X-Powered-By', 'Oak');
-
-        return $response;
+        return $handler->handle($request)
+            ->withHeader('X-Powered-By', 'Oak')
+        ;
     }
 }

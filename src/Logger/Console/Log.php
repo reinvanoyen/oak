@@ -12,8 +12,16 @@ use Oak\Contracts\Logger\LoggerInterface;
 
 class Log extends Command
 {
+    /**
+     * @var LoggerInterface $logger
+     */
     private $logger;
 
+    /**
+     * Log constructor.
+     * @param LoggerInterface $logger
+     * @param ContainerInterface $app
+     */
     public function __construct(LoggerInterface $logger, ContainerInterface $app)
     {
         $this->logger = $logger;
@@ -21,6 +29,10 @@ class Log extends Command
         parent::__construct($app);
     }
 
+    /**
+     * @param Signature $signature
+     * @return Signature
+     */
     protected function createSignature(Signature $signature): Signature
     {
         return $signature
@@ -30,6 +42,10 @@ class Log extends Command
             ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->logger->log($input->getArgument('message'));

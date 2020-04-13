@@ -7,6 +7,11 @@ use Psr\Http\Message\ResponseInterface;
 
 class ResponseEmitter implements ResponseEmitterInterface
 {
+    /**
+     * Emits a response to the browser
+     *
+     * @param ResponseInterface $response
+     */
     public function emit(ResponseInterface $response)
     {
         if (! headers_sent()) {

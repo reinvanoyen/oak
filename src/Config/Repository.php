@@ -21,6 +21,15 @@ class Repository implements RepositoryInterface
     }
 
     /**
+     * @param array $config
+     * @return mixed|void
+     */
+    public function setAll(array $config = [])
+    {
+        $this->config = $config;
+    }
+
+    /**
      * @param string $key
      * @param null $default
      * @return mixed|null

@@ -108,8 +108,6 @@ class Route
 
         $nextRequestHandler = new NextRequestHandler($middlewareStack, $coreRequestHandler);
 
-        $response = $nextRequestHandler->handle($request);
-
-        return $response;
+        return $nextRequestHandler->handle($request);
     }
 }

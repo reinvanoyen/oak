@@ -2,7 +2,6 @@
 
 namespace Oak\Http\Middleware;
 
-use Nyholm\Psr7\Response;
 use Oak\Http\Controller\BaseController;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -65,7 +65,7 @@ class LocalFilesystem implements FilesystemInterface
      * Get the last modification time of the file at path
      *
      * @param string $path
-     * @return string
+     * @return int
      */
     public function modificationTime(string $path): int
     {

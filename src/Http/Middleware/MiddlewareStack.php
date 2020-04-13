@@ -28,6 +28,8 @@ class MiddlewareStack
     }
 
     /**
+     * Check whether a next middleware is available
+     *
      * @return bool
      */
     public function hasNext(): bool
@@ -36,6 +38,8 @@ class MiddlewareStack
     }
 
     /**
+     * Process the next middleware
+     *
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $requestHandler
      * @return ResponseInterface

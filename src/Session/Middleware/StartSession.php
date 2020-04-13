@@ -2,7 +2,6 @@
 
 namespace Oak\Session\Middleware;
 
-use Oak\Config\Facade\Config;
 use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Cookie\CookieInterface;
 use Oak\Contracts\Session\SessionIdentifierInterface;

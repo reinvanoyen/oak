@@ -16,12 +16,9 @@ class TrailingSlashMiddleware implements MiddlewareInterface
         if (strlen($path) > 1) {
             if (substr($path, -1) !== '/' && ! pathinfo($path, PATHINFO_EXTENSION)) {
 
-                $response = $handler->handle($request);
-                $response = $response
+                return $handler->handle($request)
                     ->withStatus(301)
                     ->withHeader('Location', $path.'/');
-
-                return $response;
             }
         }
 

@@ -28,7 +28,7 @@ class Option
     private $description = '';
 
     /**
-     * @var $default
+     * @var bool $default
      */
     private $default = true;
 
@@ -88,7 +88,7 @@ class Option
     /**
      * @return bool
      */
-    public function getDefault()
+    public function getDefault(): bool
     {
         return $this->default;
     }

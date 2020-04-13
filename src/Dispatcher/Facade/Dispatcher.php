@@ -7,6 +7,9 @@ use Oak\Facade;
 
 class Dispatcher extends Facade
 {
+    /**
+     * @return string
+     */
     protected static function getContract(): string
     {
         return DispatcherInterface::class;

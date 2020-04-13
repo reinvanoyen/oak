@@ -11,6 +11,12 @@ interface RepositoryInterface
     public function __construct(array $config = []);
 
     /**
+     * @param array $config
+     * @return mixed
+     */
+    public function setAll(array $config = []);
+
+    /**
      * @param string $key
      * @param null $default
      * @return mixed
@@ -25,7 +31,7 @@ interface RepositoryInterface
 
     /**
      * @param string $key
-     * @param string $value
+     * @param $value
      * @return mixed
      */
     public function set(string $key, $value);

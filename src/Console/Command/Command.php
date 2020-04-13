@@ -93,7 +93,13 @@ abstract class Command
 
         $signature = $this->app->get(Signature::class);
 
-        $signature->addOption(Option::create('help', 'h')->setDescription('Display the help message'));
+        $signature
+            ->addOption(
+                Option::create('help', 'h')
+                    ->setDescription('Display the help message')
+            )
+        ;
+
         $this->signature = $this->createSignature($signature);
 
         if (! $this->signature->hasName()) {

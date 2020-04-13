@@ -42,7 +42,6 @@ class UpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         foreach ($this->manager->getMigrators() as $migrator) {
-
             if (
                 ! ($migratorName = $input->getOption('migrator')) ||
                 $migrator->getName() === $migratorName

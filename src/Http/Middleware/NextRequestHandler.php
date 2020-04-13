@@ -36,13 +36,10 @@ final class NextRequestHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($this->middlewareStack->hasNext()) {
-
-            $response = $this->middlewareStack->process($request, $this);
-            return $response;
+            return $this->middlewareStack->process($request, $this);
         }
 
         // No more middleware to be processed, so we call our final core request handler
-        $response = $this->coreRequestHandler->handle($request);
-        return $response;
+        return $this->coreRequestHandler->handle($request);
     }
 }

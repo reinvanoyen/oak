@@ -3,8 +3,8 @@
 namespace Oak\Container;
 
 use Exception;
-use Oak\Contracts\Container\ContainerInterface;
 use ReflectionClass;
+use Oak\Contracts\Container\ContainerInterface;
 
 /**
  * Class Container
@@ -128,7 +128,7 @@ class Container implements ContainerInterface
      * @param string $contract
      * @param array $arguments
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getWith(string $contract, array $arguments)
     {
@@ -148,7 +148,7 @@ class Container implements ContainerInterface
             if (class_exists($contract)) {
                 $implementation = $contract;
             } else {
-                throw new \Exception('Could not create dependency with contract: '.$contract);
+                throw new Exception('Could not create dependency with contract: '.$contract);
             }
         } else {
             $implementation = $this->contracts[$contract];

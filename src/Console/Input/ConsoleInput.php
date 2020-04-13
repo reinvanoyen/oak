@@ -32,7 +32,7 @@ class ConsoleInput extends Input
     }
 
     /**
-     *
+     * Reset the state of the input
      */
     private function reset()
     {
@@ -42,7 +42,7 @@ class ConsoleInput extends Input
     }
 
     /**
-     *
+     * Parse the input from the argv globals
      */
     private function parse()
     {

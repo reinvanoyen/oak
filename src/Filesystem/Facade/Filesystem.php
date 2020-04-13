@@ -7,6 +7,9 @@ use Oak\Facade;
 
 class Filesystem extends Facade
 {
+    /**
+     * @return string
+     */
     protected static function getContract(): string
     {
         return FilesystemInterface::class;

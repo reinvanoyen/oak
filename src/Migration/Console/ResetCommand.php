@@ -42,7 +42,6 @@ class ResetCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         foreach (array_reverse($this->manager->getMigrators()) as $migrator) {
-
             if (
                 ! ($migratorName = $input->getOption('migrator')) ||
                 $migrator->getName() === $migratorName

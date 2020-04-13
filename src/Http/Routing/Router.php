@@ -2,8 +2,6 @@
 
 namespace Oak\Http\Routing;
 
-use Http\Message\ResponseFactory;
-use Nyholm\Psr7\Response;
 use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Http\Middleware\MiddlewareRegisterInterface;
@@ -60,8 +58,7 @@ class Router implements RouterInterface, MiddlewareRegisterInterface
 
         foreach ($routes as $route) {
             if ($route->matches($path)) {
-                $response = $route->execute($this->app, $request, $this->responseFactory->createResponse(200));
-                return $response;
+                return $route->execute($this->app, $request, $this->responseFactory->createResponse(200));
             }
         }
 

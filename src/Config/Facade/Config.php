@@ -7,6 +7,9 @@ use Oak\Facade;
 
 class Config extends Facade
 {
+    /**
+     * @return string
+     */
     protected static function getContract(): string
     {
         return RepositoryInterface::class;

@@ -18,7 +18,7 @@ class ConsoleServiceProvider extends ServiceProvider
 {
     public function boot(ContainerInterface $app)
     {
-        // TODO: Implement boot() method.
+        //
     }
 
     public function register(ContainerInterface $app)

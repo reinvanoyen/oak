@@ -2,7 +2,6 @@
 
 namespace Oak\Filesystem;
 
-use Oak\Console\Facade\Console;
 use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Filesystem\FilesystemInterface;
@@ -18,7 +17,9 @@ class FilesystemServiceProvider extends ServiceProvider
     public function boot(ContainerInterface $app)
     {
         if ($app->isRunningInConsole()) {
-            $app->get(KernelInterface::class)->registerCommand(Filesystem::class);
+            $app->get(KernelInterface::class)
+                ->registerCommand(Filesystem::class)
+            ;
         }
     }
 

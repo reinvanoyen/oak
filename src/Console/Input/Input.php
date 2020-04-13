@@ -27,7 +27,6 @@ abstract class Input implements InputInterface
 
     /**
      * Holds the given subcommand
-     *
      */
     protected $subCommand;
 

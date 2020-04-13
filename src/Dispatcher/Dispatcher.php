@@ -57,7 +57,7 @@ class Dispatcher implements DispatcherInterface
      * Dispatches an event by name
      *
      * @param string $eventName
-     * @param Event|null $event
+     * @param EventInterface $event
      */
     public function dispatch(string $eventName, EventInterface $event = null)
     {
@@ -70,7 +70,7 @@ class Dispatcher implements DispatcherInterface
         foreach ($this->getListeners($eventName) as $listener) {
             $listener($event);
 
-            // Stop calling the listeners if the propagation was stopped
+            // Stop calling the upcoming listeners if the propagation was stopped
             if ($event->isPropagationStopped()) {
                 break;
             }

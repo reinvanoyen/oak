@@ -7,6 +7,10 @@ use Oak\Console\Command\Signature;
 
 class Config extends Command
 {
+    /**
+     * @param Signature $signature
+     * @return Signature
+     */
     protected function createSignature(Signature $signature): Signature
     {
         return $signature

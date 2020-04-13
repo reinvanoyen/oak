@@ -56,10 +56,10 @@ class Session
      * @param string $name
      * @param \SessionHandlerInterface $handler
      */
-    public function __construct(\SessionHandlerInterface $handler, string $name)
+    public function __construct(string $name, \SessionHandlerInterface $handler)
     {
-        $this->handler = $handler;
         $this->name = $name;
+        $this->handler = $handler;
     }
 
     /**

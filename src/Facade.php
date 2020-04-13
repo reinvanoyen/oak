@@ -14,7 +14,7 @@ abstract class Facade
     private static $container;
 
     /**
-     *
+     * Sets the container to use for creating contracts
      *
      * @param ContainerInterface $container
      */
@@ -29,6 +29,8 @@ abstract class Facade
     abstract protected static function getContract(): string;
 
     /**
+     * Gets the instance for this facade
+     *
      * @return mixed
      * @throws \Exception
      */
@@ -42,6 +44,8 @@ abstract class Facade
     }
 
     /**
+     * Statically call the requested method
+     *
      * @param $method
      * @param $arguments
      * @return mixed

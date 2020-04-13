@@ -35,8 +35,8 @@ class Kernel implements KernelInterface
      */
     public function handle(ServerRequestInterface $request)
     {
-        $response = $this->router->dispatch($request);
-
-        $this->responseEmitter->emit($response);
+        $this->responseEmitter->emit(
+            $this->router->dispatch($request)
+        );
     }
 }

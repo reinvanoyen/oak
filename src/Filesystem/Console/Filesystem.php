@@ -10,7 +10,7 @@ class Filesystem extends Command
     protected function createSignature(Signature $signature): Signature
     {
         return $signature
-            ->setName('fs')
+            ->setName('filesystem')
             ->addSubCommand(Directories::class)
             ->addSubCommand(Files::class)
         ;

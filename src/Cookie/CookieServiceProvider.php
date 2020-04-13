@@ -2,7 +2,6 @@
 
 namespace Oak\Cookie;
 
-use Oak\Config\Facade\Config;
 use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Cookie\CookieInterface;
@@ -19,9 +18,10 @@ class CookieServiceProvider extends ServiceProvider
 
     public function register(ContainerInterface $app)
     {
-        $config = $app->get(RepositoryInterface::class);
+        $app->singleton(CookieInterface::class, function($app) {
 
-        $app->singleton(CookieInterface::class, function($app) use ($config) {
+            $config = $app->get(RepositoryInterface::class);
+
             return new Cookie(
                 $config->get('cookie.path', '/'),
                 $config->get('cookie.secure', false),

@@ -36,6 +36,10 @@ class Cache extends Command
         parent::__construct($app);
     }
 
+    /**
+     * @param Signature $signature
+     * @return Signature
+     */
     protected function createSignature(Signature $signature): Signature
     {
         return $signature
@@ -44,9 +48,13 @@ class Cache extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->filesystem->put('cache/config.php', '<?php return '.var_export($this->config->all(), true).';'.PHP_EOL);
+        $this->filesystem->put($this->config->get('app.cache_path').'config.php', '<?php return '.var_export($this->config->all(), true).';'.PHP_EOL);
         $output->writeLine('Config cached');
     }
 }

@@ -163,7 +163,7 @@ Logger::log('This message will be logged');
 
 Name | Default
 ---- | -------
-filename | cache/logs/log.txt
+filename | logs/log.txt
 date_format | d/m/Y H:i
 
 #### Session
@@ -185,7 +185,8 @@ echo Session::get('key'); // value
 
 Name | Default
 ---- | -------
-path | cache/sessions
+handler | \Oak\Session\FileSessionHandler
+path | sessions
 name | app
 cookie_prefix | session
 identifier_length | 40

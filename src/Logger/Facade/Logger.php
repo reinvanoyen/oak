@@ -7,6 +7,9 @@ use Oak\Facade;
 
 class Logger extends Facade
 {
+    /**
+     * @return string
+     */
     protected static function getContract(): string
     {
         return LoggerInterface::class;

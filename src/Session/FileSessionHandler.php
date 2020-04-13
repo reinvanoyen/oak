@@ -31,10 +31,10 @@ class FileSessionHandler implements SessionHandlerInterface
      * @param FilesystemInterface $filesystem
      * @param string $path
      */
-    public function __construct(FilesystemInterface $filesystem, string $path)
+    public function __construct(string $path, FilesystemInterface $filesystem)
     {
-        $this->filesystem = $filesystem;
         $this->path = $path;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -115,7 +115,6 @@ class FileSessionHandler implements SessionHandlerInterface
     public function write($sessionId, $sessionData)
     {
         $this->filesystem->put($this->path.'/'.$sessionId, $sessionData);
-
         return true;
     }
 }

@@ -11,43 +11,49 @@ use Oak\Contracts\Filesystem\FilesystemInterface;
  */
 class FileOutput implements OutputInterface
 {
-	/**
-	 * @var FilesystemInterface $filesystem
-	 */
-	private $filesystem;
+    /**
+     * @var string $filename
+     */
+    private $filename;
 
-	/**
-	 * FileOutput constructor.
-	 * @param FilesystemInterface $filesystem
-	 */
-	public function __construct(FilesystemInterface $filesystem)
-	{
-		$this->filesystem = $filesystem;
-	}
+    /**
+     * @var FilesystemInterface $filesystem
+     */
+    private $filesystem;
 
-	/**
-	 * @param string $message
-	 * @param int $type
-	 */
-	public function writeLine(string $message, int $type = self::TYPE_PLAIN)
-	{
-		$this->filesystem->append('haha.txt', $message."\n");
-	}
+    /**
+     * FileOutput constructor.
+     * @param FilesystemInterface $filesystem
+     */
+    public function __construct(string $filename, FilesystemInterface $filesystem)
+    {
+        $this->filename = $filename;
+        $this->filesystem = $filesystem;
+    }
 
-	/**
-	 * @param string $message
-	 * @param int $type
-	 */
-	public function write(string $message, int $type = self::TYPE_PLAIN)
-	{
-		$this->filesystem->append('haha.txt', $message);
-	}
+    /**
+     * @param string $message
+     * @param int $type
+     */
+    public function writeLine(string $message, int $type = self::TYPE_PLAIN)
+    {
+        $this->filesystem->append($this->filename, $message."\n");
+    }
 
-	/**
-	 *
-	 */
-	public function newline()
-	{
-		$this->filesystem->append('haha.txt', "\n"); // @TODO make filename a property
-	}
+    /**
+     * @param string $message
+     * @param int $type
+     */
+    public function write(string $message, int $type = self::TYPE_PLAIN)
+    {
+        $this->filesystem->append($this->filename, $message);
+    }
+
+    /**
+     *
+     */
+    public function newline()
+    {
+        $this->filesystem->append($this->filename, "\n");
+    }
 }

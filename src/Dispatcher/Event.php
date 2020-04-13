@@ -24,7 +24,7 @@ class Event implements EventInterface
     }
 
     /**
-     * @return mixed|void
+     * @return void
      */
     public function stopPropagation()
     {
