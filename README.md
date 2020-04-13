@@ -121,6 +121,8 @@ echo Session::get('key'); // value
 Name | Default
 ---- | -------
 path | cache/sessions
-name | oak_app
+name | app
 cookie_prefix | session
 identifier_length | 40
+lottery | 200
+max_lifetime | 1000
