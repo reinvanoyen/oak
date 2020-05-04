@@ -11,6 +11,8 @@ use Oak\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider
 {
+    protected $isLazy = true;
+
     public function boot(ContainerInterface $app)
     {
         // Register Config command
@@ -47,5 +49,10 @@ class ConfigServiceProvider extends ServiceProvider
     public function register(ContainerInterface $app)
     {
         $app->singleton(RepositoryInterface::class, Repository::class);
+    }
+
+    public function provides(): array
+    {
+        return [RepositoryInterface::class,];
     }
 }
