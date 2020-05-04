@@ -11,6 +11,7 @@ use Oak\Contracts\Http\KernelInterface;
 use Oak\Http\Routing\Router;
 use Oak\ServiceProvider;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class HttpServiceProvider extends ServiceProvider
@@ -26,7 +27,7 @@ class HttpServiceProvider extends ServiceProvider
         $app->singleton(KernelInterface::class, Kernel::class);
         $app->set(ResponseEmitterInterface::class, ResponseEmitter::class);
         $app->set(ResponseFactoryInterface::class, Psr17Factory::class);
-
+        $app->set(StreamFactoryInterface::class, Psr17Factory::class);
         $app->set(ServerRequestInterface::class, function($app) {
             $psr17Factory = $app->get(ResponseFactoryInterface::class);
             return (new ServerRequestCreator(
