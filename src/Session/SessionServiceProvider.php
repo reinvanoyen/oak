@@ -13,21 +13,13 @@ class SessionServiceProvider extends ServiceProvider
     public function register(ContainerInterface $app)
     {
         $config = $app->get(RepositoryInterface::class);
+
         $app->singleton(\SessionHandlerInterface::class, $config->get('session.handler', FileSessionHandler::class));
         $app->singleton(Session::class, Session::class);
         $app->singleton(SessionIdentifierInterface::class, SessionIdentifier::class);
 
-        $app->whenAsksGive(
-            FileSessionHandler::class,
-            'path',
-            $config->get('session.path', 'sessions')
-        );
-
-        $app->whenAsksGive(
-            Session::class,
-            'name',
-            $config->get('session.name', 'app')
-        );
+        $app->whenAsksGive(FileSessionHandler::class, 'path', $config->get('session.path', 'sessions'));
+        $app->whenAsksGive(Session::class, 'name', $config->get('session.name', 'app'));
     }
 
     public function boot(ContainerInterface $app)

@@ -98,7 +98,9 @@ class Route
             'response' => $response,
         ]);
 
-        $middlewareStack = new MiddlewareStack($middleware);
+        $middlewareStack = $app->getWith(MiddlewareStack::class, [
+            'middleware' => $middleware,
+        ]);
 
         $coreRequestHandler = $app->getWith(CoreRequestHandler::class, [
             'controller' => $controller,

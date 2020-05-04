@@ -27,4 +27,20 @@ class BaseController
         $this->request = $request;
         $this->response = $response;
     }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function getResponse(): ResponseInterface
+    {
+        return $this->response;
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
+    public function getRequest(): ServerRequestInterface
+    {
+        return $this->request;
+    }
 }

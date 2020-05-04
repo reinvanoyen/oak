@@ -11,11 +11,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 class CoreRequestHandler implements RequestHandlerInterface
 {
     /**
-     * @var ResponseFactoryInterface $responseFactory
-     */
-    private $responseFactory;
-
-    /**
      * @var BaseController $controller
      */
     private $controller;
@@ -32,14 +27,12 @@ class CoreRequestHandler implements RequestHandlerInterface
 
     /**
      * CoreRequestHandler constructor.
-     * @param ResponseFactoryInterface $responseFactory
      * @param $controller
      * @param string $method
      * @param array $params
      */
-    public function __construct(ResponseFactoryInterface $responseFactory, BaseController $controller, string $method, array $params = [])
+    public function __construct(BaseController $controller, string $method, array $params = [])
     {
-        $this->responseFactory = $responseFactory;
         $this->controller = $controller;
         $this->method = $method;
         $this->params = $params;
@@ -53,16 +46,18 @@ class CoreRequestHandler implements RequestHandlerInterface
     {
         $output = call_user_func_array([$this->controller, $this->method,], $this->params);
 
+        // Check if we already have a response
         if ($output instanceof ResponseInterface) {
+
+            // It's already a response, return it
             return $output;
         }
 
-        $response = $this->responseFactory->createResponse(200)
-            ->withHeader('Content-Type', 'text/html')
-        ;
+        // Get the response from the controller
+        $response = $this->controller->getResponse();
 
+        // ...and write to its body
         $response->getBody()->write($output);
-        $response->getBody()->rewind();
 
         return $response;
     }

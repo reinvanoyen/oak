@@ -19,7 +19,10 @@ trait MiddlewareRegisterTrait
     {
         if (! isset($this->middlewares[$name])) {
             $this->middlewareGroups[$name] = $middlewares;
+            return;
         }
+
+        $this->middlewareGroups[$name] = array_merge($this->middlewareGroups[$name], $middlewares);
     }
 
     /**

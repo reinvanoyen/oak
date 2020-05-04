@@ -14,6 +14,8 @@ class ResponseEmitter implements ResponseEmitterInterface
      */
     public function emit(ResponseInterface $response)
     {
+        $response->getBody()->rewind();
+
         if (! headers_sent()) {
 
             // Status
