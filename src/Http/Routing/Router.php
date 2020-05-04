@@ -58,7 +58,9 @@ class Router implements RouterInterface, MiddlewareRegisterInterface
 
         foreach ($routes as $route) {
             if ($route->matches($path)) {
-                return $route->execute($this->app, $request, $this->responseFactory->createResponse(200));
+                return $route->execute($this->app, $request, $this->responseFactory->createResponse(200)
+                    ->withHeader('Content-Type', 'text/html')
+                );
             }
         }
 
