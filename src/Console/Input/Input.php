@@ -12,6 +12,16 @@ use Oak\Contracts\Console\InputInterface;
 abstract class Input implements InputInterface
 {
     /**
+     * @var array $rawArguments
+     */
+    protected $rawArguments = [];
+
+    /**
+     * @var array $missingArguments
+     */
+    protected $missingArguments = [];
+
+    /**
      * Holds the given arguments
      *
      * @var array
@@ -160,5 +170,70 @@ abstract class Input implements InputInterface
     public function getSignature(): Signature
     {
         return $this->signature;
+    }
+
+    /**
+     * Parse the raw arguments
+     */
+    protected function parseRawArguments()
+    {
+        // First we check if any subcommand was requested
+        if (isset($this->rawArguments[0])) {
+            foreach ($this->getSignature()->getSubCommands() as $command) {
+                if ($this->rawArguments[0] === $command->getName()) {
+                    $this->setSubCommand($command->getName());
+                    break;
+                }
+            }
+        }
+
+        // Then we parse out the options
+        foreach ($this->getSignature()->getOptions() as $option) {
+
+            $definitions = [
+                '-'.$option->getName(),
+                '--'.$option->getName(),
+            ];
+
+            if ($alias = $option->getAlias()) {
+                $definitions[] = '-'.$alias;
+                $definitions[] = '--'.$alias;
+            }
+
+            foreach ($definitions as $definition) {
+                $optionPosition = array_search($definition, $this->rawArguments);
+
+                if ($optionPosition !== false) {
+
+                    // We found the option in the list of given arguments
+                    if (
+                        isset($this->rawArguments[$optionPosition + 1]) &&
+                        substr($this->rawArguments[$optionPosition + 1], 0, strlen('-')) !== '-'
+                    ) {
+                        // We also found a value for the option
+                        // We remove the value of the option from the argument list
+                        $optionValue = $this->rawArguments[$optionPosition + 1];
+                        $this->setOption($option->getName(), $optionValue);
+                        array_splice($this->rawArguments, $optionPosition + 1, 1);
+
+                    } else {
+
+                        $this->setOption($option->getName(), $option->getDefault());
+                    }
+
+                    array_splice($this->rawArguments, $optionPosition, 1);
+                    break;
+                }
+            }
+        }
+
+        // Now we loop all arguments and make sure they are present
+        foreach ($this->getSignature()->getArguments() as $position => $argument) {
+            if (isset($this->rawArguments[$position])) {
+                $this->setArgument($argument->getName(), $this->rawArguments[$position]);
+            } else {
+                $this->missingArguments[] = $argument->getName();
+            }
+        }
     }
 }

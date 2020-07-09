@@ -15,7 +15,8 @@
         "nyholm/psr7-server": "dev-master",
         "psr/http-server-handler": "^1.0@dev",
         "psr/http-server-middleware": "^1.0@dev",
-        "vlucas/phpdotenv": "^4.1@dev"
+        "vlucas/phpdotenv": "^4.1@dev",
+        "dragonmantank/cron-expression": "dev-master"
     },
     "autoload": {
       "psr-4": {
