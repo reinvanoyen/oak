@@ -8,6 +8,7 @@
 * [Dispatcher](#dispatcher)
 * [Filesystem](#filesystem)
 * [Logger](#logger)
+* Scheduler
 * [Session](#session)
 
 #### Install
