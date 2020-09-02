@@ -21,34 +21,18 @@ class ConfigServiceProvider extends ServiceProvider
                 ->registerCommand(Config::class)
             ;
         }
-
-        // Load configuration variables
-        $fs = $app->get(FilesystemInterface::class);
-        $config = $app->get(RepositoryInterface::class);
-
-        // Check if the cache file exists
-        if ($fs->exists($app->getCachePath().'config.php')) {
-            // It exists so we set all config variables from the cache
-            $config->setAll(require $app->getCachePath().'config.php');
-            return;
-        }
-
-        // Load all variables from all config files to the repository
-        foreach ($fs->files($app->getConfigPath()) as $file) {
-            $config->set(str_replace('.php', '', basename($file)), require $file);
-        }
-
-        // Add the config path to the config
-        $config->set('app', [
-            'env_path' => $app->getEnvPath(),
-            'config_path' => $app->getConfigPath(),
-            'cache_path' => $app->getCachePath(),
-        ]);
     }
 
     public function register(ContainerInterface $app)
     {
-        $app->singleton(RepositoryInterface::class, Repository::class);
+        $app->singleton(RepositoryInterface::class, function($app) {
+            
+            return $app->getWith(Repository::class, [
+                'configPath' => $app->getConfigPath(),
+                'cachePath' => $app->getCachePath(),
+                'envPath' => $app->getEnvPath(),
+            ]);
+        });
     }
 
     public function provides(): array

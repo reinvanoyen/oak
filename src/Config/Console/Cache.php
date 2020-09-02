@@ -54,6 +54,8 @@ class Cache extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->config->reload();
+        
         $this->filesystem->put($this->config->get('app.cache_path').'config.php', '<?php return '.var_export($this->config->all(), true).';'.PHP_EOL);
         $output->writeLine('Config cached');
     }
