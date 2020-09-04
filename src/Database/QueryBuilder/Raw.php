@@ -2,9 +2,15 @@
 
 namespace Oak\Database\QueryBuilder;
 
-use Oak\Contracts\Database\QueryBuilder\StatementInterface;
+use Oak\Contracts\Database\QueryBuilder\ExpressionInterface;
 
-class Raw implements StatementInterface
+/**
+ * Raw expression for use in QueryBuilder.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
+class Raw implements ExpressionInterface
 {
     /**
      * @var string
