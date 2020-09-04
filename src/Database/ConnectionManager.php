@@ -3,8 +3,9 @@
 namespace Oak\Database;
 
 use Oak\Contracts\Database\Connection\ConnectionInterface;
+use Oak\Contracts\Database\ConnectionManagerInterface;
 
-class ConnectionManager
+class ConnectionManager implements ConnectionManagerInterface
 {
     /**
      * @var ConnectionFactory $connectionFactory
