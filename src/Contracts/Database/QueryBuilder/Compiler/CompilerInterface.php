@@ -12,7 +12,16 @@ interface CompilerInterface
 {
     /**
      * @param QueryBuilder $queryBuilder
+     */
+    public function compile(QueryBuilder $queryBuilder);
+
+    /**
      * @return string
      */
-    public function compile(QueryBuilder $queryBuilder): string;
+    public function getQuery(): string;
+
+    /**
+     * @return array
+     */
+    public function getParameters(): array;
 }

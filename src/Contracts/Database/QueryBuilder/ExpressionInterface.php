@@ -3,10 +3,10 @@
 namespace Oak\Contracts\Database\QueryBuilder;
 
 /**
- * Interface StatementInterface
+ * Interface ExpressionInterface
  * @package Oak\Contracts\Database\QueryBuilder
  */
-interface StatementInterface
+interface ExpressionInterface
 {
     /**
      * @return string
