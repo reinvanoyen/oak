@@ -45,7 +45,7 @@ class FileVersionStorage implements VersionStorageInterface
      */
     public function store(Migrator $migrator, int $version)
     {
-        $this->filesystem->put($this->path.$migrator->getName().'.txt', $version);
+        $this->filesystem->put($this->path.'/'.$migrator->getName().'.txt', $version);
     }
 
     /**
@@ -54,6 +54,10 @@ class FileVersionStorage implements VersionStorageInterface
      */
     public function get(Migrator $migrator): int
     {
-        return (int) $this->filesystem->get($this->path.$migrator->getName().'.txt');
+        if (! $this->filesystem->exists($this->path.'/'.$migrator->getName().'.txt')) {
+            $this->filesystem->put($this->path.'/'.$migrator->getName().'.txt', '0');
+        }
+        
+        return (int) $this->filesystem->get($this->path.'/'.$migrator->getName().'.txt');
     }
 }

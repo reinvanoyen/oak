@@ -235,7 +235,8 @@ $app->get(MigrationManager::class)
 Name | Default
 ---- | -------
 version_storage | \Oak\Migration\Storage\JsonVersionStorage
-version_filename | 'permanent/migration/versions.json'
+version_filename | versions.json
+version_path | permanent/migration
 
 ##### Migration commands
 Get an overview of the migration CLI:

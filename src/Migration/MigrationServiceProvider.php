@@ -8,6 +8,7 @@ use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Migration\Console\MigrationCommand;
 use Oak\Migration\Logger\ConsoleMigrationLogger;
+use Oak\Migration\Storage\FileVersionStorage;
 use Oak\Migration\Storage\JsonVersionStorage;
 use Oak\ServiceProvider;
 use Oak\Contracts\Migration\MigrationLoggerInterface;
@@ -38,7 +39,13 @@ class MigrationServiceProvider extends ServiceProvider
             $app->whenAsksGive(
                 JsonVersionStorage::class,
                 'filename',
-                $config->get('migration.version_filename', 'permanent/migration/versions.json')
+                $config->get('migration.version_path', 'permanent/migration').'/'.$config->get('migration.version_filename', 'versions.json')
+            );
+            
+            $app->whenAsksGive(
+                FileVersionStorage::class,
+                'path',
+                $config->get('migration.version_path', 'permanent/migration')
             );
         }
     }
