@@ -5,11 +5,17 @@ namespace Oak\Database\Orm;
 use Oak\Contracts\Database\Connection\ConnectionInterface;
 use Oak\Contracts\Database\ConnectionManagerInterface;
 use Oak\Database\ConnectionManager;
-use Oak\Database\Traits\HasAttributes;
+use Oak\Database\Traits\HasAttributesTrait;
 
+/**
+ * Class representing a database entity
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Model
 {
-    use HasAttributes;
+    use HasAttributesTrait;
     
     /**
      * @var string $connection
@@ -37,6 +43,7 @@ class Model
 
     /**
      * @return ConnectionInterface
+     * @throws \Exception
      */
     public function getConnection(): ConnectionInterface
     {
