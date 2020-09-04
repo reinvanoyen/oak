@@ -21,6 +21,7 @@ class JsonVersionStorage implements VersionStorageInterface
     /**
      * JsonVersionStorage constructor.
      * @param FilesystemInterface $filesystem
+     * @param string $filename
      */
     public function __construct(FilesystemInterface $filesystem, string $filename)
     {

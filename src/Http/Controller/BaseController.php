@@ -5,7 +5,13 @@ namespace Oak\Http\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class BaseController
+/**
+ * Base class to inherit when creating a controller class in the application.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
+abstract class BaseController
 {
     /**
      * @var ServerRequestInterface $request

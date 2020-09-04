@@ -2,7 +2,7 @@
 
 namespace Oak\Database\Traits;
 
-trait HasAttributes
+trait HasAttributesTrait
 {
     /**
      * @var array $attributes

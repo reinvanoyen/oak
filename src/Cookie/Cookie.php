@@ -4,6 +4,12 @@ namespace Oak\Cookie;
 
 use Oak\Contracts\Cookie\CookieInterface;
 
+/**
+ * This class provides a simple PHP interface for working with cookies.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Cookie implements CookieInterface
 {
     /**
@@ -24,6 +30,8 @@ class Cookie implements CookieInterface
     /**
      * Cookie constructor.
      * @param string $path
+     * @param bool $secure
+     * @param bool $httpOnly
      */
     public function __construct(string $path, bool $secure, bool $httpOnly)
     {

@@ -7,8 +7,10 @@ use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Contracts\Logger\LoggerInterface;
 
 /**
- * Class FileLogger
- * @package Oak\Logger
+ * Class that writes logs to a file.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
  */
 class FileLogger implements LoggerInterface
 {

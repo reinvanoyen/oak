@@ -6,6 +6,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Class responsible for handling the next middleware in the stack.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 final class NextRequestHandler implements RequestHandlerInterface
 {
     /**

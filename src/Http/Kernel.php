@@ -7,6 +7,12 @@ use Oak\Contracts\Http\Routing\RouterInterface;
 use Oak\Contracts\Http\KernelInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * The heart and soul of HTTP. This class is responsible for handling a request.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Kernel implements KernelInterface
 {
     /**

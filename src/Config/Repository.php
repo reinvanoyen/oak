@@ -5,6 +5,15 @@ namespace Oak\Config;
 use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Filesystem\FilesystemInterface;
 
+/**
+ * Class responsible for managing configuration by loading configuration files 
+ * from the filesystem and providing an API for getting the configuration variables. When loading the 
+ * configuration it also checks for a cache file. If the cache file exists, it 
+ * loads the configuration from that file.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Repository implements RepositoryInterface
 {
     /**
@@ -40,9 +49,16 @@ class Repository implements RepositoryInterface
     /**
      * Repository constructor.
      * @param FilesystemInterface $filesystem
-     * @param string $cacheFile
+     * @param string $configPath
+     * @param string $cachePath
+     * @param string $envPath
      */
-    public function __construct(FilesystemInterface $filesystem, string $configPath, string $cachePath, string $envPath)
+    public function __construct(
+        FilesystemInterface $filesystem,
+        string $configPath,
+        string $cachePath,
+        string $envPath
+    )
     {
         $this->filesystem = $filesystem;
         $this->configPath = $configPath;

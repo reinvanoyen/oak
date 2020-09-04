@@ -14,6 +14,12 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Service provider which provides the HTTP component.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class HttpServiceProvider extends ServiceProvider
 {
     public function boot(ContainerInterface $app)

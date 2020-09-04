@@ -9,6 +9,12 @@ use Oak\Contracts\Logger\LoggerInterface;
 use Oak\Logger\Console\Logger;
 use Oak\ServiceProvider;
 
+/**
+ * Service provider for the Logger component.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class LoggerServiceProvider extends ServiceProvider
 {
     public function boot(ContainerInterface $app)

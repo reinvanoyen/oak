@@ -95,7 +95,9 @@ trait HasRoutesTrait
 
     /**
      * @param string $pattern
-     * @param $controller
+     * @param string $controller
+     * @param string $method
+     * @return Route
      */
     public function options(string $pattern, string $controller, string $method): Route
     {

@@ -4,6 +4,12 @@ namespace Oak\Migration;
 
 use Oak\Contracts\Container\ContainerInterface;
 
+/**
+ * Class that manages and stores migrators.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class MigrationManager
 {
     /**

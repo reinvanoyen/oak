@@ -3,11 +3,16 @@
 namespace Oak\Http\Middleware;
 
 use Oak\Http\Controller\BaseController;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Class responsible for executing the core layer of middleware.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class CoreRequestHandler implements RequestHandlerInterface
 {
     /**

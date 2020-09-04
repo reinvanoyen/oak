@@ -10,6 +10,12 @@ use Oak\Http\Middleware\NextRequestHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class representing a route that can be registered on any class using the HasRoutesTrait
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Route
 {
     /**
@@ -44,7 +50,12 @@ class Route
      * @param string $controller
      * @param string $method
      */
-    public function __construct(MiddlewareRegisterInterface $middlewareRegister, string $pattern, string $controller, string $method)
+    public function __construct(
+        MiddlewareRegisterInterface $middlewareRegister,
+        string $pattern,
+        string $controller,
+        string $method
+    )
     {
         $this->middlewareRegister = $middlewareRegister;
         $this->pattern = $pattern;
@@ -84,7 +95,11 @@ class Route
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function execute(ContainerInterface $app, ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function execute(
+        ContainerInterface $app,
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): ResponseInterface
     {
         $middleware = [];
         foreach ($this->middleware as $middlewareName) {

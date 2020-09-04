@@ -4,6 +4,13 @@ namespace Oak\Filesystem;
 
 use Oak\Contracts\Filesystem\FilesystemInterface;
 
+/**
+ * This class provides an easy to understand PHP interface for working with 
+ * local files and directories.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class LocalFilesystem implements FilesystemInterface
 {
     /**

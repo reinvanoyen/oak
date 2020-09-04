@@ -5,6 +5,12 @@ namespace Oak\Http;
 use Oak\Contracts\Http\ResponseEmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class responsible for emitting a response.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class ResponseEmitter implements ResponseEmitterInterface
 {
     /**

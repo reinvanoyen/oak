@@ -6,10 +6,12 @@
 * [Console](#console)
 * [Container](#container)
 * [Dispatcher](#dispatcher)
+* [Database](#database)
 * [Filesystem](#filesystem)
 * [Logger](#logger)
-* Scheduler
+* [Scheduler](#scheduler)
 * [Session](#session)
+* [Migration](#migration)
 
 #### Install
 ```ssh
@@ -83,18 +85,23 @@ $app->get(KernelInterface::class)->handle(
 ```php
 <?php
 
-$config->set('package', [
+use Oak\Config\Facade\Config;
+
+Config::set('package', [
   'client_id' => '123',
   'client_secret' => 'F1jK4s5mPs9s1_sd1wpalnbs5H1',
 ]);
 
-echo $config->get('package.client_secret'); // F1jK4s5mPs9s1_sd1wpalnbs5H1
+echo Config::get('package.client_secret'); // F1jK4s5mPs9s1_sd1wpalnbs5H1
 ```
 
 ##### Config commands
+
+Remove the config cache file:
 ```ssh
 php oak config clear-cache
 ```
+Cache the config (also reloads the config and thus overwrites any existing cache):
 ```ssh
 php oak config cache
 ```
@@ -141,8 +148,11 @@ Dispatcher::addListener('created', function($event) {
 });
 
 Dispatcher::dispatch('created', new Event());
-
 ```
+
+#### Database
+
+Documentation coming soon
 
 #### Filesystem
 
@@ -166,6 +176,10 @@ Name | Default
 ---- | -------
 filename | logs/log.txt
 date_format | d/m/Y H:i
+
+#### Scheduler
+
+Documentation coming soon
 
 #### Session
 
@@ -193,3 +207,58 @@ cookie_prefix | session
 identifier_length | 40
 lottery | 200
 max_lifetime | 1000
+
+#### Migration
+
+```php
+<?php
+
+use Oak\Migration\Migrator;
+use Oak\Migration\MigrationManager;
+
+// Create a migrator with name "app"
+$migrator = $app->getWith(Migrator::class, ['name' => 'app',]);
+
+// Set some revisions
+$migrator->setRevisions([
+    CreatePageTable::class,
+    CreateSettingsTable::class,
+]);
+
+// Add the migrator to the migration manager
+$app->get(MigrationManager::class)
+    ->addMigrator($migrator);
+```
+
+##### Migration config options
+
+Name | Default
+---- | -------
+version_storage | \Oak\Migration\Storage\JsonVersionStorage
+version_filename | 'permanent/migration/versions.json'
+
+##### Migration commands
+Get an overview of the migration CLI:
+```ssh
+php oak migration
+```
+List all registered migrators:
+```ssh
+php oak migration list
+```
+Migrate to the latest version:
+```ssh
+php oak migration list
+```
+Migrate to the next version:
+```ssh
+php oak migration update
+```
+Migrate to the previous version:
+```ssh
+php oak migration downdate
+```
+Undo all migrations
+```ssh
+php oak migration reset
+```

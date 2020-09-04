@@ -6,6 +6,12 @@ use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Contracts\Migration\VersionStorageInterface;
 use Oak\Migration\Migrator;
 
+/**
+ * Class that writes/reads the migration version to/from a file.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class FileVersionStorage implements VersionStorageInterface
 {
     /**
@@ -16,21 +22,21 @@ class FileVersionStorage implements VersionStorageInterface
     private $filesystem;
 
     /**
-     * Filename of the file that stores the version number
+     * Path to the file that stores the version number
      *
      * @var string
      */
-    private $filename;
+    private $path;
 
     /**
      * FileVersionStorage constructor.
      * @param FilesystemInterface $filesystem
-     * @param string $filename
+     * @param string $path
      */
-    public function __construct(FilesystemInterface $filesystem, string $filename)
+    public function __construct(FilesystemInterface $filesystem, string $path)
     {
         $this->filesystem = $filesystem;
-        $this->filename = $filename;
+        $this->path = $path;
     }
 
     /**
@@ -39,7 +45,7 @@ class FileVersionStorage implements VersionStorageInterface
      */
     public function store(Migrator $migrator, int $version)
     {
-        $this->filesystem->put($this->filename, $version);
+        $this->filesystem->put($this->path.$migrator->getName().'.txt', $version);
     }
 
     /**
@@ -48,6 +54,6 @@ class FileVersionStorage implements VersionStorageInterface
      */
     public function get(Migrator $migrator): int
     {
-        return (int) $this->filesystem->get($this->filename);
+        return (int) $this->filesystem->get($this->path.$migrator->getName().'.txt');
     }
 }

@@ -7,6 +7,12 @@ use Oak\Contracts\Migration\MigrationLoggerInterface;
 use Oak\Contracts\Migration\RevisionInterface;
 use Oak\Contracts\Migration\VersionStorageInterface;
 
+/**
+ * Class responsible for executing migration.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Migrator
 {
     /**

@@ -13,19 +13,33 @@ use Oak\ServiceProvider;
 use Oak\Contracts\Migration\MigrationLoggerInterface;
 use Oak\Contracts\Migration\VersionStorageInterface;
 
+/**
+ * Service provider for the migration component.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class MigrationServiceProvider extends ServiceProvider
 {
     public function register(ContainerInterface $app)
     {
         if ($app->isRunningInConsole()) {
-
+            
+            $config = $app->get(RepositoryInterface::class);
+            
             $app->set(MigrationCommand::class, MigrationCommand::class);
 
             $app->singleton(MigrationManager::class, MigrationManager::class);
             $app->set(Migrator::class, Migrator::class);
             $app->set(MigrationLoggerInterface::class, ConsoleMigrationLogger::class);
-            $app->set(VersionStorageInterface::class, JsonVersionStorage::class);
-            $app->whenAsksGive(JsonVersionStorage::class, 'filename', $app->get(RepositoryInterface::class)->get('migration.version_filename'));
+            
+            $app->set(VersionStorageInterface::class, $config->get('migration.version_storage', JsonVersionStorage::class));
+            
+            $app->whenAsksGive(
+                JsonVersionStorage::class,
+                'filename',
+                $config->get('migration.version_filename', 'permanent/migration/versions.json')
+            );
         }
     }
 

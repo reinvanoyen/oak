@@ -6,7 +6,6 @@ use Oak\Config\Console\Config;
 use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Container\ContainerInterface;
-use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider

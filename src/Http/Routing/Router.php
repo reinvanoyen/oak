@@ -11,6 +11,12 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * The router dispatches the request to the correct controller for further processing.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Router implements RouterInterface, MiddlewareRegisterInterface
 {
     use HasRoutesTrait;
