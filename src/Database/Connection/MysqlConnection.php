@@ -4,6 +4,12 @@ namespace Oak\Database\Connection;
 
 use Oak\Contracts\Database\Connection\ConnectionInterface;
 
+/**
+ * Class providing connection with a MySQL database.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class MysqlConnection extends Connection implements ConnectionInterface
 {
     /**
@@ -34,6 +40,9 @@ class MysqlConnection extends Connection implements ConnectionInterface
         $this->password = $password;
     }
 
+    /**
+     * Connect to the MySQL database
+     */
     public function connect()
     {
         try {

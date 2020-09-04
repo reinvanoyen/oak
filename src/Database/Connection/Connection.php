@@ -2,6 +2,12 @@
 
 namespace Oak\Database\Connection;
 
+/**
+ * Base connection class providing all necessary methods every connection needs.
+ *
+ * @package Oak
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Connection
 {
     /**
