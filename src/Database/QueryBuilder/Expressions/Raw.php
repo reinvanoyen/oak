@@ -1,6 +1,6 @@
 <?php
 
-namespace Oak\Database\QueryBuilder;
+namespace Oak\Database\QueryBuilder\Expressions;
 
 use Oak\Contracts\Database\QueryBuilder\ExpressionInterface;
 

@@ -2,7 +2,7 @@
 
 namespace Oak\Contracts\Database\QueryBuilder\Compiler;
 
-use Oak\Database\QueryBuilder\QueryBuilder;
+use Oak\Database\QueryBuilder\BuildHandler;
 
 /**
  * Interface CompilerInterface
@@ -11,9 +11,10 @@ use Oak\Database\QueryBuilder\QueryBuilder;
 interface CompilerInterface
 {
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param BuildHandler $buildHandler
+     * @return mixed
      */
-    public function compile(QueryBuilder $queryBuilder);
+    public function compile(BuildHandler $buildHandler);
 
     /**
      * @return string

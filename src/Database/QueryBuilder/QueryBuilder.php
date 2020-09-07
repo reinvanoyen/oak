@@ -4,6 +4,7 @@ namespace Oak\Database\QueryBuilder;
 
 use Oak\Contracts\Database\QueryBuilder\Compiler\CompilerInterface;
 use Oak\Contracts\Database\QueryBuilder\ExpressionInterface;
+use Oak\Database\QueryBuilder\Expressions\Raw;
 
 /**
  * This class provides a dynamic PHP API around building queries.
@@ -11,18 +12,28 @@ use Oak\Contracts\Database\QueryBuilder\ExpressionInterface;
  * @package Oak
  * @author Rein Van Oyen <reinvanoyen@gmail.com>
  */
-class QueryBuilder
+class QueryBuilder extends BuildHandler
 {
-    /**
-     * @var string $table
-     */
-    private $table;
-
     /**
      * @var array $select
      */
     private $select = [];
 
+    /**
+     * @var bool $drop
+     */
+    private $drop = false;
+
+    /**
+     * @var callable $create
+     */
+    private $create;
+
+    /**
+     * @var callable $alter
+     */
+    private $alter;
+    
     /**
      * @var array $where
      */
@@ -39,9 +50,14 @@ class QueryBuilder
     private $offset;
 
     /**
-     * @var bool $drop
+     * @var array $groupBy
      */
-    private $drop;
+    private $groupBy = [];
+
+    /**
+     * @var array $orderBy
+     */
+    private $orderBy = [];
 
     /**
      * @var CompilerInterface $compiler
@@ -92,7 +108,33 @@ class QueryBuilder
         $this->drop = true;
         return $this;
     }
+
+    /**
+     * @param callable $createScheme
+     * @return QueryBuilder
+     */
+    public function create(callable $createScheme): QueryBuilder
+    {
+        $this->create = $createScheme;
+        return $this;
+    }
+
+    /**
+     * @param callable $alterScheme
+     * @return QueryBuilder
+     */
+    public function alter(callable $alterScheme): QueryBuilder
+    {
+        $this->alter = $alterScheme;
+        return $this;
+    }
     
+    /**
+     * @param $expr1
+     * @param string $operator
+     * @param $expr2
+     * @return QueryBuilder
+     */
     public function where($expr1, string $operator, $expr2): QueryBuilder
     {
         $this->where[] = [
@@ -124,11 +166,30 @@ class QueryBuilder
     }
 
     /**
-     * @return string
+     * @param $column
+     * @return QueryBuilder
      */
-    public function getTable(): string
+    public function groupBy($column): QueryBuilder
     {
-        return $this->table;
+        $this->groupBy[] = $this->createExpression($column, true);
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param string $sortMethod
+     * @return QueryBuilder
+     */
+    public function orderBy($column, string $sortMethod = 'ASC'): QueryBuilder
+    {
+        $field = $this->createExpression($column, true);
+        
+        $this->orderBy = array_filter($this->orderBy, function($value) use($field) {
+            return ($value[0]->getValue() !== $field->getValue());
+        });
+        
+        $this->orderBy[] = [$field, $sortMethod,];
+        return $this;
     }
     
     /**
@@ -172,43 +233,11 @@ class QueryBuilder
     }
 
     /**
-     * @param $statement
-     * @param bool $prefix
-     * @return ExpressionInterface
+     * @return array
      */
-    protected function createExpression($expr, $prefix = false): ExpressionInterface
+    public function getOrderBy(): array
     {
-        if ($expr instanceof ExpressionInterface) {
-            return $expr;
-        }
-        
-        return ($prefix ? new Raw($this->prefix($expr)) : new Raw('?', [$expr,]));
-    }
-
-    /**
-     * @param string $column
-     * @return string
-     */
-    protected function prefix(string $column): string
-    {
-        $table = $this->table;
-        $parts = explode('.', $column, 2);
-        
-        if (count($parts) > 1) {
-            $table = $parts[0];
-            $column = $parts[1];
-        }
-        
-        return $this->quote($table).'.'.$this->quote($column);
-    }
-
-    /**
-     * @param string $statement
-     * @return string
-     */
-    final protected function quote(string $statement)
-    {
-        return '`'.$statement.'`';
+        return $this->orderBy;
     }
     
     /**
@@ -218,12 +247,18 @@ class QueryBuilder
     {
         $this->compiler->compile($this);
     }
-    
+
+    /**
+     * @return string
+     */
     public function getQuery()
     {
         return $this->compiler->getQuery();
     }
 
+    /**
+     * @return array
+     */
     public function getParameters()
     {
         return $this->compiler->getParameters();

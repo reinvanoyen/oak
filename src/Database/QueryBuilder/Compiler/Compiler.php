@@ -3,6 +3,7 @@
 namespace Oak\Database\QueryBuilder\Compiler;
 
 use Oak\Contracts\Database\QueryBuilder\Compiler\CompilerInterface;
+use Oak\Database\QueryBuilder\BuildHandler;
 use Oak\Database\QueryBuilder\QueryBuilder;
 
 /**
@@ -26,34 +27,57 @@ class Compiler implements CompilerInterface
     private $parameters = [];
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param BuildHandler $queryBuilder
+     * @return mixed|void
      */
-    public function compile(QueryBuilder $queryBuilder)
+    public function compile(BuildHandler $queryBuilder)
     {
         $this->reset();
         
-        $table = $queryBuilder->getTable();
-        
         if ($select = $queryBuilder->getSelect()) {
             
-            $selectValues = [];
-            foreach ($select as $expr) {
-                $selectValues[] = $expr->getValue();
-            }
+            // We are dealing with a SELECT query
             
-            $this->query .= 'SELECT ';
-            $this->query .= implode(', ', $selectValues);
-            $this->query .= ' FROM '.$table;
-            
+            $this->compileSelect($select, $queryBuilder->getTable());
+            // @TODO insert compileJoins() here
             $this->compileWhere($queryBuilder->getWhere());
+            // @TODO insert compileGroupBy() here
+            // @TODO insert compileHaving() here
+            $this->compileOrderBy($queryBuilder->getOrderBy());
             $this->compileLimitOffset($queryBuilder->getLimit(), $queryBuilder->getOffset());
             
-        } else if ($drop = $queryBuilder->getDrop()) {
-
-            $this->query .= 'DROP TABLE '.$table;
+        } else if ($queryBuilder->getDrop()) {
+            
+            // We are dealing with a DROP query
+            
+            $this->compileDrop($queryBuilder->getTable());
         }
     }
 
+    /**
+     * @param array $select
+     * @param string $table
+     */
+    private function compileSelect(array $select, string $table)
+    {
+        $selectValues = [];
+        foreach ($select as $expr) {
+            $selectValues[] = $expr->getValue();
+        }
+
+        $this->query .= 'SELECT ';
+        $this->query .= implode(', ', $selectValues);
+        $this->query .= ' FROM '.$table;
+    }
+
+    /**
+     * @param string $table
+     */
+    private function compileDrop(string $table)
+    {
+        $this->query .= 'DROP TABLE '.$table;
+    }
+    
     /**
      * @param array $where
      */
@@ -76,6 +100,26 @@ class Compiler implements CompilerInterface
                 $this->query .= ' OFFSET '.$offset->getValue();
                 $this->addParameters($offset->getBindings());
             }
+        }
+    }
+
+    /**
+     * @param array $orderBy
+     */
+    private function compileOrderBy(array $orderBy)
+    {
+        if ($orderBy) {
+            $orderByStatements = [];
+
+            foreach ($orderBy as $orderByExpr) {
+
+                $orderByStatement = $orderByExpr[0];
+
+                $orderByStatements[] = $orderByStatement->getValue().' '.$orderByExpr[1];
+                $this->addParameters($orderByStatement->getBindings());
+            }
+            
+            $this->query .= ' ORDER BY '.implode(', ', $orderByStatements);
         }
     }
 
