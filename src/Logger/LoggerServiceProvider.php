@@ -5,7 +5,9 @@ namespace Oak\Logger;
 use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Container\ContainerInterface;
+use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Contracts\Logger\LoggerInterface;
+use Oak\Filesystem\DiskManager;
 use Oak\Logger\Console\Logger;
 use Oak\ServiceProvider;
 
@@ -17,6 +19,8 @@ use Oak\ServiceProvider;
  */
 class LoggerServiceProvider extends ServiceProvider
 {
+    protected $isLazy = true;
+    
     public function boot(ContainerInterface $app)
     {
         if ($app->isRunningInConsole()) {
@@ -26,12 +30,16 @@ class LoggerServiceProvider extends ServiceProvider
 
     public function register(ContainerInterface $app)
     {
-        $app->set(LoggerInterface::class, FileLogger::class);
-        $app->whenAsksGive(
-            FileLogger::class,
-            'filename',
-            $app->get(RepositoryInterface::class)
-                ->get('logger.filename', 'logs/log.txt')
-        );
+        $app->set(LoggerFactory::class, LoggerFactory::class);
+        $app->set(ChannelManager::class, ChannelManager::class);
+        $app->set(LoggerInterface::class, function($app) {
+            return $app->get(ChannelManager::class)
+                ->channel('default');
+        });
+    }
+    
+    public function provides(): array
+    {
+        return [LoggerFactory::class, ChannelManager::class, LoggerInterface::class,];
     }
 }

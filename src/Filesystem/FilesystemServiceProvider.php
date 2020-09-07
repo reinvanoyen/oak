@@ -25,6 +25,7 @@ class FilesystemServiceProvider extends ServiceProvider
 
     public function register(ContainerInterface $app)
     {
+        $app->set(DiskManager::class, DiskManager::class);
         $app->set(FilesystemInterface::class, LocalFilesystem::class);
     }
 }

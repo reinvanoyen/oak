@@ -2,9 +2,8 @@
 
 namespace Oak\Logger;
 
-use Oak\Contracts\Config\RepositoryInterface;
-use Oak\Contracts\Filesystem\FilesystemInterface;
 use Oak\Contracts\Logger\LoggerInterface;
+use Oak\Filesystem\DiskManager;
 
 /**
  * Class that writes logs to a file.
@@ -18,27 +17,35 @@ class FileLogger implements LoggerInterface
      * @var string $filename
      */
     private $filename;
-
+    
     /**
-     * @var FilesystemInterface $filesystem
+     * @var string $disk
      */
-    private $filesystem;
-
+    private $disk;
+    
     /**
-     * @var RepositoryInterface $config
+     * @var string $dateFormat
      */
-    private $config;
+    private $dateFormat;
+    
+    /**
+     * @var DiskManager $diskManager
+     */
+    private $diskManager;
 
     /**
      * FileLogger constructor.
      * @param string $filename
-     * @param FilesystemInterface $filesystem
+     * @param string $disk
+     * @param string $dateFormat
+     * @param DiskManager $diskManager
      */
-    public function __construct(string $filename, FilesystemInterface $filesystem, RepositoryInterface $config)
+    public function __construct(string $filename, string $disk, string $dateFormat, DiskManager $diskManager)
     {
         $this->filename = $filename;
-        $this->filesystem = $filesystem;
-        $this->config = $config;
+        $this->disk = $disk;
+        $this->dateFormat = $dateFormat;
+        $this->diskManager = $diskManager;
     }
 
     /**
@@ -46,6 +53,10 @@ class FileLogger implements LoggerInterface
      */
     public function log(string $text)
     {
-        $this->filesystem->append($this->filename, date($this->config->get('logger.date_format', 'd/m/Y H:i')).' - '.$text."\n");
+        $date = date($this->dateFormat);
+        $line = $date.' - '.$text;
+        
+        $this->diskManager->disk($this->disk)
+            ->append($this->filename, $line."\n");
     }
 }
